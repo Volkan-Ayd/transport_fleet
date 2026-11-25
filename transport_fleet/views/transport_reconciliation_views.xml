@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transport_reconciliation_line_view_list" model="ir.ui.view">
+        <field name="name">transport.reconciliation.line.list</field>
+        <field name="model">transport.reconciliation.line</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'applied'" decoration-danger="state in ('unmatched', 'partner_mismatch')"
+                  decoration-warning="state == 'pending' and km_fark != 0">
+                <field name="partner_id"/>
+                <field name="chassis_number"/>
+                <field name="trip_id" optional="show"/>
+                <field name="order_id" string="Sipariş No" optional="show"/>
+                <field name="customer_km" string="Müşteri Km"/>
+                <field name="our_km" string="Bizim Km"/>
+                <field name="km_fark" string="Km Farkı" sum="Toplam Km Farkı"/>
+                <field name="customer_price" string="Müşteri Ücreti"/>
+                <field name="our_price" string="Bizim Ücretimiz"/>
+                <field name="price_fark" string="Ücret Farkı" sum="Toplam Ücret Farkı"/>
+                <field name="note" optional="hide"/>
+                <field name="applied_date" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-danger="state in ('unmatched', 'partner_mismatch')"
+                       decoration-warning="state == 'pending'"
+                       decoration-success="state == 'applied'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="transport_reconciliation_line_view_form" model="ir.ui.view">
+        <field name="name">transport.reconciliation.line.form</field>
+        <field name="model">transport.reconciliation.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_apply_customer_values" string="Müşteri Değerlerini Uygula"
+                            type="object" class="oe_highlight" invisible="state != 'pending'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,applied"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_trip" type="object" class="oe_stat_button"
+                                icon="fa-truck" invisible="not trip_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Sefer</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="Müşterinin Bildirdiği">
+                            <field name="partner_id"/>
+                            <field name="chassis_number"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="customer_km"/>
+                            <field name="customer_price"/>
+                        </group>
+                        <group string="Bizim Kayıtlarımız">
+                            <field name="trip_id" readonly="1"/>
+                            <field name="order_id" string="Sipariş No" readonly="1"/>
+                            <field name="order_line_id" readonly="1"/>
+                            <field name="our_km" readonly="1"/>
+                            <field name="our_price" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Fark">
+                            <field name="km_fark" readonly="1"/>
+                            <field name="price_fark" readonly="1"/>
+                        </group>
+                        <group string="Diğer">
+                            <field name="note"/>
+                            <field name="applied_date" invisible="not applied_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_reconciliation_line_view_search" model="ir.ui.view">
+        <field name="name">transport.reconciliation.line.search</field>
+        <field name="model">transport.reconciliation.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="chassis_number"/>
+                <field name="trip_id"/>
+                <field name="order_id" string="Sipariş No"/>
+                <filter name="pending" string="Beklemede" domain="[('state', '=', 'pending')]"/>
+                <filter name="unmatched" string="Eşleşmedi" domain="[('state', 'in', ('unmatched', 'partner_mismatch'))]"/>
+                <filter name="applied" string="Düzeltildi" domain="[('state', '=', 'applied')]"/>
+                <filter name="has_diff" string="Fark Var" domain="[('km_fark', '!=', 0)]"/>
+                <separator/>
+                <group>
+                    <filter name="group_partner" string="Müşteri" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_trip" string="Sefer" context="{'group_by': 'trip_id'}"/>
+                    <filter name="group_order" string="Sipariş No" context="{'group_by': 'order_id'}"/>
+                    <filter name="group_state" string="Durum" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="transport_reconciliation_line_action" model="ir.actions.act_window">
+        <field name="name">Müşteri Km Mutabakatı</field>
+        <field name="res_model">transport.reconciliation.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_pending': 1, 'search_default_unmatched': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smart_action">
+                Müşteriden gelen km/ücret mutabakat Excel'ini buraya içe aktarın (Liste görünümünde
+                üst menüden "İçe Aktar"). Her satır, şasi numarasına göre bizim sefer kayıtlarımızla
+                otomatik eşleştirilir; müşterinin değerlerini kabul ettiğiniz satırları seçip
+                "Müşteri Değerlerini Uygula" ile ilgili fatura satırlarının km/ücretini düzeltebilirsiniz.
+            </p>
+        </field>
+    </record>
+
+    <record id="transport_reconciliation_line_action_apply" model="ir.actions.server">
+        <field name="name">Müşteri Değerlerini Uygula</field>
+        <field name="model_id" ref="model_transport_reconciliation_line"/>
+        <field name="binding_model_id" ref="model_transport_reconciliation_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_apply_customer_values()</field>
+    </record>
+</odoo>

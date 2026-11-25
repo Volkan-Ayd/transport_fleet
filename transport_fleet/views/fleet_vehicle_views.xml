@@ -10,8 +10,24 @@
                         icon="fa-file-text-o">
                     <field name="expiring_document_count" widget="statinfo" string="Uyarılı Belge"/>
                 </button>
+                <button name="action_assign_lead_wizard" type="object" class="oe_stat_button"
+                        icon="fa-handshake-o"
+                        invisible="transport_state not in ('available', 'returning')">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Teklif Ata /</span>
+                        <span class="o_stat_text">Sefer Başlat</span>
+                    </div>
+                </button>
+                <button name="action_open_return_wizard" type="object" class="oe_stat_button"
+                        icon="fa-check-circle"
+                        invisible="transport_state != 'returning'">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Dönüş</span>
+                        <span class="o_stat_text">Tamamlandı</span>
+                    </div>
+                </button>
             </xpath>
-            <xpath expr="//notebook" position="inside">
+            <xpath expr="//page[@name='page_tax_info']" position="before">
                 <page string="Taşımacılık" name="transport">
                     <group>
                         <group string="Operasyon">
@@ -19,6 +35,7 @@
                             <field name="transport_state"/>
                             <field name="transport_driver_id"/>
                             <field name="current_trailer_id"/>
+                            <field name="current_trip_id" invisible="not current_trip_id"/>
                             <field name="hgs_tag"/>
                             <field name="is_adr"/>
                         </group>
@@ -53,6 +70,7 @@
                 <filter name="t_tractor" string="Çekiciler" domain="[('transport_type', '=', 'tractor')]"/>
                 <filter name="t_available" string="Müsait" domain="[('transport_state', '=', 'available')]"/>
                 <filter name="t_on_trip" string="Seferde" domain="[('transport_state', '=', 'on_trip')]"/>
+                <filter name="t_returning" string="Dönüş Yolunda" domain="[('transport_state', '=', 'returning')]"/>
                 <filter name="t_down" string="Bakımda / Arızalı"
                         domain="[('transport_state', 'in', ('maintenance', 'breakdown'))]"/>
                 <filter name="g_t_state" string="Operasyon Durumu" context="{'group_by': 'transport_state'}"/>
@@ -74,9 +92,12 @@
                 <field name="current_trailer_id"/>
                 <field name="max_payload" optional="show"/>
                 <field name="odometer" optional="show"/>
+                <field name="transport_idle_hours" optional="show" string="Müsait Olma (Saat)"/>
+                <field name="transport_driver_month_km" optional="hide" string="Bu Ay Km (Şoför)"/>
                 <field name="transport_state" widget="badge"
                        decoration-success="transport_state == 'available'"
                        decoration-info="transport_state == 'on_trip'"
+                       decoration-primary="transport_state == 'returning'"
                        decoration-warning="transport_state == 'maintenance'"
                        decoration-danger="transport_state == 'breakdown'"/>
                 <field name="expiring_document_count" optional="show"/>
@@ -84,11 +105,83 @@
         </field>
     </record>
 
+    <record id="transport_vehicle_view_kanban" model="ir.ui.view">
+        <field name="name">transport.vehicle.kanban</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="transport_state" quick_create="false">
+                <field name="license_plate"/>
+                <field name="model_id"/>
+                <field name="transport_type"/>
+                <field name="transport_driver_id"/>
+                <field name="current_trailer_id"/>
+                <field name="transport_state"/>
+                <field name="expiring_document_count"/>
+                <field name="current_trip_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <strong class="fs-5"><field name="license_plate"/></strong>
+                            <span t-if="record.expiring_document_count.raw_value > 0"
+                                  class="badge text-bg-danger">
+                                <field name="expiring_document_count"/> uyarı
+                            </span>
+                        </div>
+                        <div class="text-muted"><field name="model_id"/></div>
+                        <div t-if="record.transport_driver_id.raw_value">
+                            <i class="fa fa-user me-1"/><field name="transport_driver_id"/>
+                        </div>
+                        <div t-if="record.current_trailer_id.raw_value">
+                            <i class="fa fa-truck me-1"/><field name="current_trailer_id"/>
+                        </div>
+                        <div t-if="['on_trip', 'returning'].includes(record.transport_state.raw_value)
+                                   and record.current_trip_id.raw_value"
+                             class="fw-bold text-primary">
+                            <i class="fa fa-map-signs me-1"/><field name="current_trip_id"/>
+                        </div>
+                        <footer t-if="['available', 'returning'].includes(record.transport_state.raw_value)"
+                                class="pt-2">
+                            <button name="action_assign_lead_wizard" type="object"
+                                    class="btn btn-sm btn-primary">
+                                Teklif Ata / Sefer Başlat
+                            </button>
+                            <button t-if="record.transport_state.raw_value == 'returning'"
+                                    name="action_open_return_wizard" type="object"
+                                    class="btn btn-sm btn-success">
+                                Dönüş Tamamlandı
+                            </button>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="transport_vehicle_suggest_view_list" model="ir.ui.view">
+        <field name="name">transport.vehicle.suggest.list</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <list default_order="transport_state_since asc" create="false" delete="false" edit="false">
+                <field name="license_plate"/>
+                <field name="transport_driver_id"/>
+                <field name="current_trailer_id" optional="show"/>
+                <field name="transport_state" widget="badge"
+                       decoration-success="transport_state == 'available'"
+                       decoration-primary="transport_state == 'returning'"/>
+                <field name="transport_idle_hours" string="Müsait Olma (Saat)" widget="float_time"/>
+                <field name="transport_driver_month_km" string="Bu Ay Km (Şoför)"/>
+                <button name="action_assign_to_lead_from_suggestion" type="object"
+                        string="Bu Aracı Ata" class="btn-primary"/>
+            </list>
+        </field>
+    </record>
+
     <record id="transport_vehicle_action" model="ir.actions.act_window">
         <field name="name">Çekiciler / Araçlar</field>
         <field name="res_model">fleet.vehicle</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('transport_vehicle_view_kanban')}),
             (0, 0, {'view_mode': 'list', 'view_id': ref('transport_vehicle_view_list')}),
             (0, 0, {'view_mode': 'form'})]"/>
     </record>

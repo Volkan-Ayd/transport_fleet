@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transport_fuel_efficiency_report_view_pivot" model="ir.ui.view">
+        <field name="name">transport.fuel.efficiency.report.pivot</field>
+        <field name="model">transport.fuel.efficiency.report</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="vehicle_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="liters" type="measure"/>
+                <field name="distance_km" type="measure"/>
+                <field name="consumption_rate" type="measure"/>
+                <field name="vehicle_avg_rate" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="transport_fuel_efficiency_report_view_graph" model="ir.ui.view">
+        <field name="name">transport.fuel.efficiency.report.graph</field>
+        <field name="model">transport.fuel.efficiency.report</field>
+        <field name="arch" type="xml">
+            <graph type="bar" string="Yakıt Verimliliği">
+                <field name="vehicle_id" type="row"/>
+                <field name="consumption_rate" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="transport_fuel_efficiency_report_view_list" model="ir.ui.view">
+        <field name="name">transport.fuel.efficiency.report.list</field>
+        <field name="model">transport.fuel.efficiency.report</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false" decoration-danger="is_outlier">
+                <field name="date"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <field name="liters"/>
+                <field name="distance_km"/>
+                <field name="consumption_rate"/>
+                <field name="vehicle_avg_rate"/>
+                <field name="is_outlier" widget="boolean_toggle" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="transport_fuel_efficiency_report_view_search" model="ir.ui.view">
+        <field name="name">transport.fuel.efficiency.report.search</field>
+        <field name="model">transport.fuel.efficiency.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <filter name="outliers" string="Aykırı Değerler" domain="[('is_outlier', '=', True)]"/>
+                <separator/>
+                <group>
+                    <filter name="group_vehicle" string="Araç" context="{'group_by': 'vehicle_id'}"/>
+                    <filter name="group_driver" string="Şoför" context="{'group_by': 'driver_id'}"/>
+                    <filter name="group_month" string="Ay" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="transport_fuel_efficiency_report_action" model="ir.actions.act_window">
+        <field name="name">Yakıt Verimliliği Raporu</field>
+        <field name="res_model">transport.fuel.efficiency.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{'search_default_group_vehicle': 1}</field>
+    </record>
+</odoo>

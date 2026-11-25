@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transport_driver_earning_view_form" model="ir.ui.view">
+        <field name="name">transport.driver.earning.form</field>
+        <field name="model">transport.driver.earning</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_pay_drivers" string="Ödeme Yap" type="object"
+                            class="oe_highlight" invisible="payment_state != 'unpaid'"/>
+                    <field name="payment_state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_trip" type="object" class="oe_stat_button"
+                                icon="fa-truck">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Sefer</span>
+                            </div>
+                        </button>
+                        <button name="action_open_fleet_service" type="object" class="oe_stat_button"
+                                icon="fa-wrench" invisible="not fleet_service_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Bakım/Masraf Kaydı</span>
+                            </div>
+                        </button>
+                        <button name="action_open_move" type="object" class="oe_stat_button"
+                                icon="fa-file-text-o" invisible="not move_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Yevmiye Fişi</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <group>
+                                <group string="Sefer / Şoför">
+                                    <field name="date"/>
+                                    <field name="driver_id"/>
+                                    <field name="trip_id" invisible="not trip_id"/>
+                                    <field name="grupaj_trip_id" invisible="not grupaj_trip_id"/>
+                                    <field name="vehicle_id"/>
+                                </group>
+                                <group string="Tutar">
+                                    <field name="earning_type"/>
+                                    <field name="distance_km" invisible="earning_type != 'distance'"/>
+                                    <field name="rate_per_km" invisible="earning_type != 'distance'"/>
+                                    <field name="amount"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </group>
+                            </group>
+                        </div>
+                        <div class="col-md-3" invisible="not expense_image">
+                            <field name="expense_image" widget="image" class="oe_avatar"
+                                   options="{'size': [0, 200], 'zoom': true}"/>
+                            <p class="text-muted text-center">Fiş/arıza fotoğrafı (büyütmek için üzerine tıklayın)</p>
+                        </div>
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_driver_earning_view_list" model="ir.ui.view">
+        <field name="name">transport.driver.earning.list</field>
+        <field name="model">transport.driver.earning</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="payment_state in ('paid', 'company_paid')">
+                <field name="date"/>
+                <field name="driver_id"/>
+                <field name="trip_id" optional="show"/>
+                <field name="grupaj_trip_id" optional="show"/>
+                <field name="vehicle_id"/>
+                <field name="earning_type" widget="badge"/>
+                <field name="distance_km" sum="Toplam Km" optional="show"/>
+                <field name="rate_per_km" optional="show"/>
+                <field name="fleet_service_id" optional="show"/>
+                <field name="amount" sum="Toplam Tutar"/>
+                <field name="move_id" optional="show"/>
+                <field name="payment_state" widget="badge"
+                       decoration-warning="payment_state == 'to_pay'"
+                       decoration-success="payment_state == 'paid'"
+                       decoration-info="payment_state == 'company_paid'"
+                       decoration-muted="payment_state == 'unpaid'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="transport_driver_earning_view_search" model="ir.ui.view">
+        <field name="name">transport.driver.earning.search</field>
+        <field name="model">transport.driver.earning</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="driver_id"/>
+                <field name="trip_id"/>
+                <field name="grupaj_trip_id"/>
+                <filter name="unpaid" string="Ödenmedi" domain="[('payment_state', '=', 'unpaid')]"/>
+                <filter name="to_pay" string="Onay Bekliyor" domain="[('payment_state', '=', 'to_pay')]"/>
+                <filter name="paid" string="Ödendi" domain="[('payment_state', '=', 'paid')]"/>
+                <filter name="company_paid" string="Şirket Ödedi" domain="[('payment_state', '=', 'company_paid')]"/>
+                <separator/>
+                <filter name="type_distance" string="Mesafe Hakedişi" domain="[('earning_type', '=', 'distance')]"/>
+                <filter name="type_expense" string="Masraf İadesi" domain="[('earning_type', '=', 'expense')]"/>
+                <separator/>
+                <group>
+                    <filter name="group_driver" string="Şoför" context="{'group_by': 'driver_id'}"/>
+                    <filter name="group_type" string="Tür" context="{'group_by': 'earning_type'}"/>
+                    <filter name="group_state" string="Ödeme Durumu" context="{'group_by': 'payment_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="transport_driver_earning_action" model="ir.actions.act_window">
+        <field name="name">Şoför Hakedişleri</field>
+        <field name="res_model">transport.driver.earning</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_unpaid': 1}</field>
+    </record>
+
+    <record id="transport_driver_earning_action_pay" model="ir.actions.server">
+        <field name="name">Şoföre Ödeme Yap</field>
+        <field name="model_id" ref="model_transport_driver_earning"/>
+        <field name="binding_model_id" ref="model_transport_driver_earning"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_pay_drivers()</field>
+    </record>
+</odoo>

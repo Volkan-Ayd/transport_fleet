@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_transport_trip" model="ir.sequence">
+        <field name="name">Taşımacılık Seferi</field>
+        <field name="code">transport.trip</field>
+        <field name="prefix">SEFER/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="seq_transport_grupaj_trip" model="ir.sequence">
+        <field name="name">Grupaj Seferi</field>
+        <field name="code">transport.grupaj.trip</field>
+        <field name="prefix">GRUPAJ/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

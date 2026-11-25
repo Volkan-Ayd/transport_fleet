@@ -1,5 +1,7 @@
 from odoo import api, fields, models
 
+CAPACITY_SELECTION = [(str(i), str(i)) for i in range(1, 11)]
+
 
 class TransportTrailer(models.Model):
     _name = 'transport.trailer'
@@ -33,6 +35,7 @@ class TransportTrailer(models.Model):
     state = fields.Selection([
         ('available', 'Müsait'),
         ('on_trip', 'Seferde'),
+        ('returning', 'Dönüş Yolunda'),
         ('maintenance', 'Bakımda'),
         ('breakdown', 'Arızalı'),
     ], string='Durum', default='available', required=True, tracking=True)
@@ -40,9 +43,22 @@ class TransportTrailer(models.Model):
     tractor_id = fields.Many2one('fleet.vehicle', string='Çekici', compute='_compute_tractor_id')
     document_ids = fields.One2many('transport.document', 'trailer_id', string='Belgeler')
     expiring_document_count = fields.Integer(compute='_compute_expiring_document_count')
+    capacity = fields.Selection(
+        CAPACITY_SELECTION, string='Kapasite (Araç Sayısı)', default='7', required=True, tracking=True,
+        help='Bu dorsenin aynı anda taşıyabileceği araç sayısı.')
     note = fields.Text(string='Not')
+    gps_device_id = fields.Char(
+        string='GPS Takip Cihazı No',
+        help='Bu dorseye takılı GPS takip cihazının seri/ID numarası (varsa).')
     active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company', string='Şirket', default=lambda self: self.env.company)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('capacity'):
+                vals['capacity'] = self.env.company.transport_default_trailer_capacity or '7'
+        return super().create(vals_list)
 
     @api.depends('tractor_ids')
     def _compute_tractor_id(self):

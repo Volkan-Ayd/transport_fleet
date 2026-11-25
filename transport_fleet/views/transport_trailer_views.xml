@@ -11,13 +11,46 @@
                 <field name="max_payload" optional="show"/>
                 <field name="volume_m3" optional="hide"/>
                 <field name="tractor_id"/>
+                <field name="capacity" optional="show" string="Araç Kapasitesi"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'available'"
                        decoration-info="state == 'on_trip'"
+                       decoration-primary="state == 'returning'"
                        decoration-warning="state == 'maintenance'"
                        decoration-danger="state == 'breakdown'"/>
                 <field name="expiring_document_count" optional="show"/>
             </list>
+        </field>
+    </record>
+
+    <record id="transport_trailer_view_kanban" model="ir.ui.view">
+        <field name="name">transport.trailer.kanban</field>
+        <field name="model">transport.trailer</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create="false">
+                <field name="license_plate"/>
+                <field name="trailer_type"/>
+                <field name="tractor_id"/>
+                <field name="state"/>
+                <field name="capacity"/>
+                <field name="expiring_document_count"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <strong class="fs-5"><field name="license_plate"/></strong>
+                            <span t-if="record.expiring_document_count.raw_value > 0"
+                                  class="badge text-bg-danger">
+                                <field name="expiring_document_count"/> uyarı
+                            </span>
+                        </div>
+                        <div class="text-muted"><field name="trailer_type"/></div>
+                        <div t-if="record.tractor_id.raw_value">
+                            <i class="fa fa-truck me-1"/><field name="tractor_id"/>
+                        </div>
+                        <div><i class="fa fa-car me-1"/><field name="capacity"/> araç kapasitesi</div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -48,11 +81,13 @@
                             <field name="trailer_type"/>
                             <field name="brand"/>
                             <field name="model_year"/>
+                            <field name="gps_device_id"/>
                             <field name="tractor_id"/>
                             <field name="tractor_ids" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Kapasite">
+                            <field name="capacity"/>
                             <field name="axle_count"/>
                             <field name="max_payload"/>
                             <field name="volume_m3"/>
@@ -90,6 +125,7 @@
                 <field name="brand"/>
                 <filter name="available" string="Müsait" domain="[('state', '=', 'available')]"/>
                 <filter name="on_trip" string="Seferde" domain="[('state', '=', 'on_trip')]"/>
+                <filter name="returning" string="Dönüş Yolunda" domain="[('state', '=', 'returning')]"/>
                 <filter name="maintenance" string="Bakımda / Arızalı"
                         domain="[('state', 'in', ('maintenance', 'breakdown'))]"/>
                 <separator/>
@@ -105,6 +141,11 @@
     <record id="transport_trailer_action" model="ir.actions.act_window">
         <field name="name">Dorseler</field>
         <field name="res_model">transport.trailer</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('transport_trailer_view_kanban')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('transport_trailer_view_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('transport_trailer_view_form')}),
+        ]"/>
     </record>
 </odoo>

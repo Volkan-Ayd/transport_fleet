@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_transport" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.transport</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="fleet.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@id='fleet']" position="inside">
+                <block title="Taşımacılık" id="transport_pricing_setting">
+                    <setting string="Varsayılan Sefer Ücretlendirmesi"
+                             help="Yeni oluşturulan seferlerde ücretlendirme yöntemi için varsayılan değer. Her teklif kendi ücretlendirme yöntemini bağımsız olarak seçebilir; bu sadece başlangıç değeridir.">
+                        <field name="transport_default_pricing_method" widget="radio"/>
+                    </setting>
+                    <setting string="Taşıma Satış Fiyatları"
+                             help="Hangi teklifte hangi ücretlendirme yöntemi seçiliyse (yukarıdaki varsayılandan bağımsız olarak) o fiyat kullanılır. Boş/0 bırakılırsa ürünün kendi satış fiyatına geri dönülür.">
+                        <div class="content-group">
+                            <label for="transport_customer_price_per_vehicle" string="Araç Başı Satış Fiyatı"/>
+                            <field name="transport_customer_price_per_vehicle"/>
+                            <label for="transport_customer_price_per_km" string="Km Başı Satış Fiyatı"/>
+                            <field name="transport_customer_price_per_km"/>
+                        </div>
+                    </setting>
+                    <setting string="Varsayılan Dorse Kapasitesi"
+                             help="Yeni oluşturulan dorselerde taşıyabileceği araç sayısı için varsayılan değer.">
+                        <field name="transport_default_trailer_capacity"/>
+                    </setting>
+                    <setting string="Şoför Km Ücreti"
+                             help="Şoför hakedişi hesaplanırken sefer sırasında katedilen her km için ödenecek tutar (dönüş km hariç).">
+                        <field name="transport_driver_rate_per_km"/>
+                    </setting>
+                    <setting string="Şoför Hakedişi Muhasebe Hesapları"
+                             help="Ödeme fişi oluşturulurken kullanılacak hesaplar. Boş bırakılırsa otomatik aranır.">
+                        <field name="transport_driver_expense_account_id" placeholder="Gider hesabı (otomatik ara)"/>
+                        <field name="transport_driver_payable_account_id" placeholder="Borç hesabı (otomatik ara)"/>
+                    </setting>
+                    <setting string="HGS Masrafı Muhasebe Hesapları"
+                             help="HGS geçiş kayıtlarından masraf fişi oluşturulurken kullanılacak hesaplar. Boş bırakılırsa otomatik aranır.">
+                        <field name="transport_hgs_expense_account_id" placeholder="Gider hesabı (otomatik ara)"/>
+                        <field name="transport_hgs_payable_account_id" placeholder="Borç hesabı (otomatik ara)"/>
+                    </setting>
+                    <setting string="Ek Satış Kalemi Fiyatları"
+                             help="Satış siparişi/faturada 'Avrupa Geçiş Ekle' ve 'İndirme-Bindirme Ekle' butonlarıyla eklenen satırlarda kullanılacak birim fiyatlar.">
+                        <div class="content-group">
+                            <label for="transport_europe_crossing_price" string="Avrupa Geçiş Fiyatı"/>
+                            <field name="transport_europe_crossing_price"/>
+                            <label for="transport_loading_unloading_price" string="İndirme-Bindirme Fiyatı"/>
+                            <field name="transport_loading_unloading_price"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

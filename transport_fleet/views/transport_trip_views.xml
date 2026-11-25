@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transport_trip_view_form" model="ir.ui.view">
+        <field name="name">transport.trip.form</field>
+        <field name="model">transport.trip</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="Seferi Başlat" type="object"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_open_end_wizard" string="Seferi Sonlandır (Teslim)" type="object"
+                            class="oe_highlight" invisible="state != 'confirmed' or not pending_cargo_count"/>
+                    <button name="action_open_add_cargo_wizard" string="Yolda Yeni Müşteri/Araç Ekle" type="object"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_open_return_wizard" string="Dönüş Tamamlandı" type="object"
+                            class="oe_highlight" invisible="state != 'done' or return_datetime"/>
+                    <button name="action_open_expense_wizard" string="Masraf Ekle" type="object"
+                            invisible="state not in ('confirmed', 'done')"/>
+                    <button name="action_open_fuel_wizard" string="Yakıt Ekle" type="object"
+                            invisible="state not in ('confirmed', 'done')"/>
+                    <button name="action_cancel" string="Seferi İptal Et" type="object"
+                            confirm="Bu seferi iptal etmek istediğinize emin misiniz? Araç müsait duruma alınacak."
+                            invisible="state not in ('draft', 'confirmed')"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sale_orders" type="object" class="oe_stat_button"
+                                icon="fa-file-text-o" invisible="not sale_order_count">
+                            <field name="sale_order_count" widget="statinfo" string="Satış Siparişi"/>
+                        </button>
+                        <button name="%(transport_driver_earning_action)d" type="action"
+                                class="oe_stat_button" icon="fa-money"
+                                context="{'search_default_trip_id': id}"
+                                invisible="not driver_earning_count">
+                            <field name="driver_earning_count" widget="statinfo" string="Şoför Hakedişi"/>
+                        </button>
+                        <button name="%(transport_trip_fuel_action)d" type="action"
+                                class="oe_stat_button" icon="fa-tint"
+                                context="{'search_default_trip_id': id}"
+                                invisible="not fuel_count">
+                            <field name="fuel_count" widget="statinfo" string="Yakıt"/>
+                        </button>
+                        <button name="%(transport_hgs_record_action)d" type="action"
+                                class="oe_stat_button" icon="fa-road"
+                                context="{'search_default_trip_id': id}"
+                                invisible="not hgs_record_count">
+                            <field name="hgs_record_count" widget="statinfo" string="HGS Geçişi"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Faturalandı" bg_color="text-bg-success"
+                            invisible="billing_status != 'invoiced'"/>
+                    <widget name="web_ribbon" title="Kısmi Faturalandı" bg_color="text-bg-warning"
+                            invisible="billing_status != 'partial'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Sefer Bilgisi">
+                            <field name="lead_id" readonly="state != 'draft'"/>
+                            <field name="partner_id" readonly="1" invisible="not partner_id"/>
+                            <field name="customer_count" invisible="customer_count &lt;= 1"/>
+                            <field name="vehicle_id" readonly="state != 'draft'"/>
+                            <field name="driver_id" readonly="1"/>
+                            <field name="trailer_id" readonly="1"/>
+                            <field name="pricing_method" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Teslim Alma / Km">
+                            <field name="last_odometer"/>
+                            <field name="odometer" readonly="state != 'draft'"/>
+                            <field name="start_datetime" invisible="not start_datetime"/>
+                            <field name="end_datetime" invisible="not end_datetime"/>
+                            <field name="outbound_distance_km" invisible="not outbound_distance_km"/>
+                            <field name="return_odometer" invisible="not return_datetime"/>
+                            <field name="return_datetime" invisible="not return_datetime"/>
+                            <field name="return_distance_km"
+                                   invisible="not return_datetime and not outbound_distance_km"/>
+                            <field name="pending_cargo_count" invisible="state == 'draft'"/>
+                            <field name="billing_status" widget="badge" invisible="not sale_order_count"
+                                   decoration-warning="billing_status == 'partial'"
+                                   decoration-success="billing_status == 'invoiced'"
+                                   decoration-muted="billing_status == 'not_invoiced'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Taşınan Araçlar (Şasi No)" name="cargo">
+                            <field name="cargo_line_ids">
+                                <list editable="bottom" decoration-success="delivered"
+                                      create="parent.state in ('draft', 'confirmed')"
+                                      delete="parent.state == 'draft'">
+                                    <field name="chassis_number" placeholder="Şasi numarasını okutun..."
+                                           readonly="parent.state not in ('draft', 'confirmed') or pickup_odometer"/>
+                                    <field name="lead_id" placeholder="Boşsa ana teklif kullanılır"
+                                           options="{'no_create': True}"
+                                           readonly="parent.state not in ('draft', 'confirmed') or pickup_odometer"/>
+                                    <field name="partner_id" optional="show"
+                                           placeholder="Teklif yoksa müşteriyi burada seçin"
+                                           options="{'no_create': True}"
+                                           readonly="parent.state not in ('draft', 'confirmed') or pickup_odometer"/>
+                                    <field name="pickup_location" optional="show" placeholder="Alım yeri"
+                                           readonly="parent.state not in ('draft', 'confirmed') or pickup_odometer"/>
+                                    <field name="destination" optional="show" placeholder="Varış yeri"
+                                           readonly="parent.state not in ('draft', 'confirmed') or pickup_odometer"/>
+                                    <field name="note" optional="hide"
+                                           readonly="parent.state not in ('draft', 'confirmed') or pickup_odometer"/>
+                                    <field name="pickup_odometer" string="Yüklendiği Km" optional="show" readonly="1"/>
+                                    <field name="delivered" widget="boolean_toggle" readonly="1"/>
+                                    <field name="delivered_odometer" string="Teslim Edildiği Km"
+                                           optional="show" readonly="1"/>
+                                    <field name="delivered_km" optional="show" readonly="1"/>
+                                    <field name="delivered_date" optional="hide" readonly="1"/>
+                                    <button name="action_open_pickup_wizard" type="object"
+                                            icon="fa-arrow-circle-down" title="Araç Teslim Al"
+                                            string="Teslim Al"/>
+                                    <button name="action_open_deliver_wizard" type="object"
+                                            icon="fa-arrow-circle-up" title="Araç Teslim Et"
+                                            string="Teslim Et" invisible="delivered"/>
+                                    <button name="action_open_damage_wizard" type="object"
+                                            icon="fa-exclamation-triangle" title="Hasar Ekle"
+                                            string="Hasar"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_trip_view_list" model="ir.ui.view">
+        <field name="name">transport.trip.list</field>
+        <field name="model">transport.trip</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'done'" decoration-info="state == 'confirmed'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <field name="partner_id" string="Ana Müşteri"/>
+                <field name="customer_count"/>
+                <field name="pricing_method"/>
+                <field name="cargo_count"/>
+                <field name="pending_cargo_count"/>
+                <field name="odometer"/>
+                <field name="sale_order_count"/>
+                <field name="billing_status" widget="badge"
+                       decoration-warning="billing_status == 'partial'"
+                       decoration-success="billing_status == 'invoiced'"
+                       decoration-muted="billing_status == 'not_invoiced'"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'draft'"
+                       decoration-info="state == 'confirmed'"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancelled'"/>
+                <button name="action_cancel" type="object" icon="fa-ban" title="Seferi İptal Et"
+                        confirm="Bu seferi iptal etmek istediğinize emin misiniz? Araç müsait duruma alınacak."
+                        invisible="state not in ('draft', 'confirmed')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="transport_trip_action" model="ir.actions.act_window">
+        <field name="name">Seferler</field>
+        <field name="res_model">transport.trip</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="transport_trip_end_wizard_view_form" model="ir.ui.view">
+        <field name="name">transport.trip.end.wizard.form</field>
+        <field name="model">transport.trip.end.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="trip_id" invisible="1"/>
+                <group>
+                    <field name="last_odometer"/>
+                    <field name="new_odometer" placeholder="Yeni km giriniz..."/>
+                </group>
+                <field name="line_ids" widget="many2many_checkboxes"/>
+                <footer>
+                    <button name="action_confirm" string="Teslim Et / Sonlandır" type="object"
+                            class="oe_highlight"/>
+                    <button string="İptal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_trip_add_cargo_wizard_view_form" model="ir.ui.view">
+        <field name="name">transport.trip.add.cargo.wizard.form</field>
+        <field name="model">transport.trip.add.cargo.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="trip_id" invisible="1"/>
+                <group>
+                    <field name="last_odometer"/>
+                    <field name="odometer" placeholder="Şu anki km giriniz..."/>
+                    <field name="lead_id" placeholder="Yolda yüklenen müşteri/teklif..."/>
+                </group>
+                <field name="chassis_ids" widget="many2many_checkboxes"/>
+                <footer>
+                    <button name="action_confirm" string="Yükle ve Sefere Ekle" type="object"
+                            class="oe_highlight"/>
+                    <button string="İptal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_trip_expense_wizard_view_form" model="ir.ui.view">
+        <field name="name">transport.trip.expense.wizard.form</field>
+        <field name="model">transport.trip.expense.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="trip_id" invisible="1"/>
+                <field name="grupaj_trip_id" invisible="1"/>
+                <sheet>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <group>
+                                <group string="Araç / Şoför">
+                                    <field name="vehicle_id" readonly="1"/>
+                                    <field name="driver_id" readonly="1"/>
+                                </group>
+                                <group string="Masraf">
+                                    <field name="service_type_id" placeholder="Örn. Lastik Değiştirme"/>
+                                    <field name="description" placeholder="Kısa açıklama..."/>
+                                    <field name="amount"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="payment_method" widget="radio"/>
+                                <field name="vendor_id" invisible="payment_method == 'cash'"
+                                       required="payment_method != 'cash'"
+                                       placeholder="Tedarikçi/servis seçin..."/>
+                            </group>
+                        </div>
+                        <div class="col-md-3">
+                            <field name="image_1920" widget="image" class="oe_avatar"
+                                   options="{'size': [0, 200], 'zoom': true}"/>
+                            <p class="text-muted text-center">Fiş/arıza fotoğrafı (büyütmek için üzerine tıklayın)</p>
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" string="Kaydet" type="object" class="oe_highlight"/>
+                    <button string="İptal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_trip_fuel_wizard_view_form" model="ir.ui.view">
+        <field name="name">transport.trip.fuel.wizard.form</field>
+        <field name="model">transport.trip.fuel.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="trip_id" invisible="1"/>
+                <field name="grupaj_trip_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <group>
+                    <field name="last_odometer"/>
+                    <field name="fuel_limit" invisible="not fuel_limit"/>
+                    <field name="odometer" placeholder="Yakıt alındığı km..."/>
+                    <field name="liters" placeholder="Alınan litre..."/>
+                    <field name="price_per_liter" placeholder="Litre birim fiyatı..."/>
+                    <field name="total_cost"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Kaydet" type="object" class="oe_highlight"/>
+                    <button string="İptal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_trip_line_damage_wizard_view_form" model="ir.ui.view">
+        <field name="name">transport.trip.line.damage.wizard.form</field>
+        <field name="model">transport.trip.line.damage.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="line_id" invisible="1"/>
+                <field name="grupaj_trip_id" invisible="1"/>
+                <sheet>
+                    <group>
+                        <field name="chassis_number" readonly="1"/>
+                        <field name="partner_id" readonly="1" invisible="not partner_id"/>
+                        <field name="note" placeholder="Hasarla ilgili not..."/>
+                    </group>
+                    <field name="image_ids" widget="many2many_binary"/>
+                    <p class="text-muted">Hasar fotoğrafları (birden fazla fotoğraf ekleyebilirsiniz)</p>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" string="Kaydet (Chatter'a Ekle)" type="object"
+                            class="oe_highlight"/>
+                    <button string="İptal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_trip_line_pickup_wizard_view_form" model="ir.ui.view">
+        <field name="name">transport.trip.line.pickup.wizard.form</field>
+        <field name="model">transport.trip.line.pickup.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="line_id" invisible="1"/>
+                <field name="trip_id" invisible="1"/>
+                <sheet>
+                    <group>
+                        <field name="chassis_number" readonly="1"/>
+                        <field name="partner_id" readonly="1" invisible="not partner_id"/>
+                        <field name="last_odometer" readonly="1"/>
+                        <field name="pickup_odometer" placeholder="Teslim alma km..."/>
+                    </group>
+                    <field name="image_ids" widget="many2many_binary"/>
+                    <p class="text-muted">Teslim alma fotoğrafları (birden fazla fotoğraf ekleyebilirsiniz)</p>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" string="Teslim Al (Chatter'a Ekle)" type="object"
+                            class="oe_highlight"/>
+                    <button string="İptal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_trip_line_deliver_wizard_view_form" model="ir.ui.view">
+        <field name="name">transport.trip.line.deliver.wizard.form</field>
+        <field name="model">transport.trip.line.deliver.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="line_id" invisible="1"/>
+                <field name="trip_id" invisible="1"/>
+                <sheet>
+                    <group>
+                        <field name="chassis_number" readonly="1"/>
+                        <field name="partner_id" readonly="1" invisible="not partner_id"/>
+                        <field name="pickup_odometer" readonly="1"/>
+                        <field name="last_odometer" readonly="1"/>
+                        <field name="delivered_odometer" placeholder="Teslim km..."/>
+                    </group>
+                    <field name="image_ids" widget="many2many_binary"/>
+                    <p class="text-muted">Teslim fotoğrafları (birden fazla fotoğraf ekleyebilirsiniz)</p>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" string="Teslim Et (Chatter'a Ekle)" type="object"
+                            class="oe_highlight"/>
+                    <button string="İptal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_trip_return_wizard_view_form" model="ir.ui.view">
+        <field name="name">transport.trip.return.wizard.form</field>
+        <field name="model">transport.trip.return.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="trip_id" invisible="1"/>
+                <group>
+                    <field name="vehicle_id" readonly="1"/>
+                    <field name="last_odometer"/>
+                    <field name="return_odometer" placeholder="Garaja ulaştığındaki km..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Dönüşü Tamamla" type="object"
+                            class="oe_highlight"/>
+                    <button string="İptal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

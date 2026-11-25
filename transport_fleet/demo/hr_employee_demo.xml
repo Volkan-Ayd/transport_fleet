@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="transport_driver_mehmet" model="hr.employee">
+        <field name="name">Mehmet Yılmaz</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">on_trip</field>
+    </record>
+
+    <record id="transport_driver_ali" model="hr.employee">
+        <field name="name">Ali Demir</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">available</field>
+    </record>
+
+    <record id="transport_driver_hasan" model="hr.employee">
+        <field name="name">Hasan Kaya</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">C</field>
+        <field name="driver_state">rest</field>
+    </record>
+
+    <record id="transport_driver_ahmet" model="hr.employee">
+        <field name="name">Ahmet Çelik</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">available</field>
+    </record>
+
+    <record id="transport_driver_mustafa" model="hr.employee">
+        <field name="name">Mustafa Kara</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">on_trip</field>
+    </record>
+
+    <record id="transport_driver_huseyin" model="hr.employee">
+        <field name="name">Hüseyin Arslan</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">available</field>
+    </record>
+
+    <record id="transport_driver_osman" model="hr.employee">
+        <field name="name">Osman Güneş</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">available</field>
+    </record>
+
+    <record id="transport_driver_kemal" model="hr.employee">
+        <field name="name">Kemal Şahin</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">on_trip</field>
+    </record>
+
+    <record id="transport_driver_ibrahim" model="hr.employee">
+        <field name="name">İbrahim Doğan</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">available</field>
+    </record>
+
+    <record id="transport_driver_yusuf" model="hr.employee">
+        <field name="name">Yusuf Aydın</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">C</field>
+        <field name="driver_state">rest</field>
+    </record>
+
+    <record id="transport_driver_murat" model="hr.employee">
+        <field name="name">Murat Kaplan</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">available</field>
+    </record>
+
+    <record id="transport_driver_serkan" model="hr.employee">
+        <field name="name">Serkan Koç</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">available</field>
+    </record>
+
+    <record id="transport_driver_emre" model="hr.employee">
+        <field name="name">Emre Polat</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">on_trip</field>
+    </record>
+
+    <record id="transport_driver_tolga" model="hr.employee">
+        <field name="name">Tolga Aksoy</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">available</field>
+    </record>
+
+    <record id="transport_driver_burak" model="hr.employee">
+        <field name="name">Burak Er</field>
+        <field name="job_title">Tır Şoförü</field>
+        <field name="is_driver" eval="True"/>
+        <field name="license_class">CE</field>
+        <field name="driver_state">leave</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="transport_model_mercedes_actros" model="fleet.vehicle.model">
+        <field name="name">Actros</field>
+        <field name="brand_id" ref="fleet.brand_mercedes"/>
+        <field name="vehicle_type">other</field>
+    </record>
+
+    <record id="transport_model_volvo_fh" model="fleet.vehicle.model">
+        <field name="name">FH16</field>
+        <field name="brand_id" ref="fleet.brand_volvo"/>
+        <field name="vehicle_type">other</field>
+    </record>
+
+    <record id="transport_model_renault_t" model="fleet.vehicle.model">
+        <field name="name">T High</field>
+        <field name="brand_id" ref="fleet.brand_renault"/>
+        <field name="vehicle_type">other</field>
+    </record>
+
+    <record id="transport_model_ford_cargo" model="fleet.vehicle.model">
+        <field name="name">Cargo</field>
+        <field name="brand_id" ref="fleet.brand_ford"/>
+        <field name="vehicle_type">other</field>
+    </record>
+
+    <record id="transport_model_isuzu_giga" model="fleet.vehicle.model">
+        <field name="name">Giga</field>
+        <field name="brand_id" ref="fleet.brand_isuzu"/>
+        <field name="vehicle_type">other</field>
+    </record>
+
+</odoo>

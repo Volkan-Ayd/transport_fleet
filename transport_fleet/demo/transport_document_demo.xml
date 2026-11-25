@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Araç 1 - Mercedes Actros 34 ABC 123 -->
+    <record id="transport_document_1" model="transport.document">
+        <field name="owner_type">vehicle</field>
+        <field name="vehicle_id" ref="transport_vehicle_1"/>
+        <field name="doc_type">inspection</field>
+        <field name="reference">MUA-2026-0145</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=10)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_2" model="transport.document">
+        <field name="owner_type">vehicle</field>
+        <field name="vehicle_id" ref="transport_vehicle_1"/>
+        <field name="doc_type">traffic_insurance</field>
+        <field name="reference">ZTS-2026-9981</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=200)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_3" model="transport.document">
+        <field name="owner_type">vehicle</field>
+        <field name="vehicle_id" ref="transport_vehicle_1"/>
+        <field name="doc_type">k_certificate</field>
+        <field name="reference">K1-2024-3310</field>
+        <field name="expiry_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Araç 2 - Volvo FH16 35 DEF 456 -->
+    <record id="transport_document_4" model="transport.document">
+        <field name="owner_type">vehicle</field>
+        <field name="vehicle_id" ref="transport_vehicle_2"/>
+        <field name="doc_type">inspection</field>
+        <field name="reference">MUA-2026-0198</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=100)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_5" model="transport.document">
+        <field name="owner_type">vehicle</field>
+        <field name="vehicle_id" ref="transport_vehicle_2"/>
+        <field name="doc_type">kasko</field>
+        <field name="reference">KSK-2026-4471</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=20)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Araç 3 - Renault T High 06 GHI 789 -->
+    <record id="transport_document_6" model="transport.document">
+        <field name="owner_type">vehicle</field>
+        <field name="vehicle_id" ref="transport_vehicle_3"/>
+        <field name="doc_type">registration</field>
+        <field name="reference">RUH-06-GHI-789</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=400)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_7" model="transport.document">
+        <field name="owner_type">vehicle</field>
+        <field name="vehicle_id" ref="transport_vehicle_3"/>
+        <field name="doc_type">tachograph</field>
+        <field name="reference">TKG-2024-7765</field>
+        <field name="expiry_date" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Araç 4 - Ford Cargo 16 JKL 321 (ADR) -->
+    <record id="transport_document_8" model="transport.document">
+        <field name="owner_type">vehicle</field>
+        <field name="vehicle_id" ref="transport_vehicle_4"/>
+        <field name="doc_type">adr_vehicle</field>
+        <field name="reference">ADR-2026-1120</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=15)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_9" model="transport.document">
+        <field name="owner_type">vehicle</field>
+        <field name="vehicle_id" ref="transport_vehicle_4"/>
+        <field name="doc_type">traffic_insurance</field>
+        <field name="reference">ZTS-2026-2290</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=365)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Dorse 1 - Krone Tenteli 34 TR 001 -->
+    <record id="transport_document_10" model="transport.document">
+        <field name="owner_type">trailer</field>
+        <field name="trailer_id" ref="transport_trailer_1"/>
+        <field name="doc_type">inspection</field>
+        <field name="reference">MUA-2026-0310</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=60)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_11" model="transport.document">
+        <field name="owner_type">trailer</field>
+        <field name="trailer_id" ref="transport_trailer_1"/>
+        <field name="doc_type">traffic_insurance</field>
+        <field name="reference">ZTS-2026-5541</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=10)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Dorse 2 - Schmitz Frigorifik 34 TR 002 -->
+    <record id="transport_document_12" model="transport.document">
+        <field name="owner_type">trailer</field>
+        <field name="trailer_id" ref="transport_trailer_2"/>
+        <field name="doc_type">registration</field>
+        <field name="reference">RUH-34-TR-002</field>
+        <field name="expiry_date" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Dorse 3 - Fruehauf Tanker 06 TR 003 -->
+    <record id="transport_document_13" model="transport.document">
+        <field name="owner_type">trailer</field>
+        <field name="trailer_id" ref="transport_trailer_3"/>
+        <field name="doc_type">adr_vehicle</field>
+        <field name="reference">ADR-2026-3321</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=300)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Şoför 1 - Mehmet Yılmaz -->
+    <record id="transport_document_14" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_mehmet"/>
+        <field name="doc_type">license</field>
+        <field name="reference">34-EH-110233</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=500)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_15" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_mehmet"/>
+        <field name="doc_type">src</field>
+        <field name="reference">SRC2-2026-0044</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=25)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_16" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_mehmet"/>
+        <field name="doc_type">psychotechnic</field>
+        <field name="reference">PSK-2024-9012</field>
+        <field name="expiry_date" eval="(DateTime.today() - relativedelta(days=10)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Şoför 2 - Ali Demir -->
+    <record id="transport_document_17" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_ali"/>
+        <field name="doc_type">license</field>
+        <field name="reference">35-EH-220144</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=365)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_18" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_ali"/>
+        <field name="doc_type">health</field>
+        <field name="reference">SGR-2026-1203</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=45)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_19" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_ali"/>
+        <field name="doc_type">adr_driver</field>
+        <field name="reference">ADR-SRT-2026-77</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=10)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Şoför 3 - Hasan Kaya -->
+    <record id="transport_document_20" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_hasan"/>
+        <field name="doc_type">license</field>
+        <field name="reference">06-EH-330855</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=200)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_21" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_hasan"/>
+        <field name="doc_type">src</field>
+        <field name="reference">SRC2-2024-0099</field>
+        <field name="expiry_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Şoför 4 - Ahmet Çelik -->
+    <record id="transport_document_22" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_ahmet"/>
+        <field name="doc_type">license</field>
+        <field name="reference">16-EH-440677</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=300)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_23" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_ahmet"/>
+        <field name="doc_type">adr_driver</field>
+        <field name="reference">ADR-SRT-2026-88</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=20)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- Şoför 5 - Mustafa Kara -->
+    <record id="transport_document_24" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_mustafa"/>
+        <field name="doc_type">license</field>
+        <field name="reference">34-EH-550991</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=400)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="transport_document_25" model="transport.document">
+        <field name="owner_type">employee</field>
+        <field name="employee_id" ref="transport_driver_mustafa"/>
+        <field name="doc_type">src</field>
+        <field name="reference">SRC2-2026-0150</field>
+        <field name="expiry_date" eval="(DateTime.today() + relativedelta(days=90)).strftime('%Y-%m-%d')"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="transport_trailer_1" model="transport.trailer">
+        <field name="license_plate">34 TR 001</field>
+        <field name="trailer_type">curtain</field>
+        <field name="brand">Krone</field>
+        <field name="model_year">2021</field>
+        <field name="axle_count">3</field>
+        <field name="max_payload">24000</field>
+        <field name="volume_m3">90</field>
+        <field name="length_m">13.6</field>
+        <field name="state">on_trip</field>
+    </record>
+
+    <record id="transport_trailer_2" model="transport.trailer">
+        <field name="license_plate">34 TR 002</field>
+        <field name="trailer_type">reefer</field>
+        <field name="brand">Schmitz Cargobull</field>
+        <field name="model_year">2022</field>
+        <field name="axle_count">3</field>
+        <field name="max_payload">22000</field>
+        <field name="volume_m3">86</field>
+        <field name="length_m">13.6</field>
+        <field name="state">available</field>
+    </record>
+
+    <record id="transport_trailer_3" model="transport.trailer">
+        <field name="license_plate">06 TR 003</field>
+        <field name="trailer_type">tanker</field>
+        <field name="brand">Fruehauf</field>
+        <field name="model_year">2019</field>
+        <field name="axle_count">3</field>
+        <field name="max_payload">26000</field>
+        <field name="volume_m3">32</field>
+        <field name="length_m">11.5</field>
+        <field name="state">maintenance</field>
+    </record>
+
+    <record id="transport_trailer_4" model="transport.trailer">
+        <field name="license_plate">34 TR 004</field>
+        <field name="trailer_type">flatbed</field>
+        <field name="brand">Lohr</field>
+        <field name="model_year">2022</field>
+        <field name="axle_count">2</field>
+        <field name="max_payload">18000</field>
+        <field name="capacity">1</field>
+        <field name="state">available</field>
+    </record>
+
+    <record id="transport_trailer_5" model="transport.trailer">
+        <field name="license_plate">06 TR 005</field>
+        <field name="trailer_type">flatbed</field>
+        <field name="brand">Lohr</field>
+        <field name="model_year">2022</field>
+        <field name="axle_count">2</field>
+        <field name="max_payload">18000</field>
+        <field name="capacity">2</field>
+        <field name="state">available</field>
+    </record>
+
+    <record id="transport_trailer_6" model="transport.trailer">
+        <field name="license_plate">16 TR 006</field>
+        <field name="trailer_type">flatbed</field>
+        <field name="brand">Rolfo</field>
+        <field name="model_year">2021</field>
+        <field name="axle_count">2</field>
+        <field name="max_payload">19000</field>
+        <field name="capacity">3</field>
+        <field name="state">on_trip</field>
+    </record>
+
+    <record id="transport_trailer_7" model="transport.trailer">
+        <field name="license_plate">35 TR 007</field>
+        <field name="trailer_type">flatbed</field>
+        <field name="brand">Rolfo</field>
+        <field name="model_year">2021</field>
+        <field name="axle_count">3</field>
+        <field name="max_payload">20000</field>
+        <field name="capacity">4</field>
+        <field name="state">available</field>
+    </record>
+
+    <record id="transport_trailer_8" model="transport.trailer">
+        <field name="license_plate">42 TR 008</field>
+        <field name="trailer_type">flatbed</field>
+        <field name="brand">Lohr</field>
+        <field name="model_year">2020</field>
+        <field name="axle_count">3</field>
+        <field name="max_payload">21000</field>
+        <field name="capacity">5</field>
+        <field name="state">available</field>
+    </record>
+
+    <record id="transport_trailer_9" model="transport.trailer">
+        <field name="license_plate">01 TR 009</field>
+        <field name="trailer_type">flatbed</field>
+        <field name="brand">Rolfo</field>
+        <field name="model_year">2023</field>
+        <field name="axle_count">3</field>
+        <field name="max_payload">22000</field>
+        <field name="capacity">6</field>
+        <field name="state">available</field>
+    </record>
+
+    <record id="transport_trailer_10" model="transport.trailer">
+        <field name="license_plate">27 TR 010</field>
+        <field name="trailer_type">flatbed</field>
+        <field name="brand">Lohr</field>
+        <field name="model_year">2023</field>
+        <field name="axle_count">3</field>
+        <field name="max_payload">23000</field>
+        <field name="capacity">7</field>
+        <field name="state">on_trip</field>
+    </record>
+
+    <record id="transport_trailer_11" model="transport.trailer">
+        <field name="license_plate">61 TR 011</field>
+        <field name="trailer_type">container</field>
+        <field name="brand">Krone</field>
+        <field name="model_year">2020</field>
+        <field name="axle_count">3</field>
+        <field name="max_payload">24000</field>
+        <field name="capacity">8</field>
+        <field name="state">available</field>
+    </record>
+
+    <record id="transport_trailer_12" model="transport.trailer">
+        <field name="license_plate">44 TR 012</field>
+        <field name="trailer_type">flatbed</field>
+        <field name="brand">Rolfo</field>
+        <field name="model_year">2022</field>
+        <field name="axle_count">3</field>
+        <field name="max_payload">25000</field>
+        <field name="capacity">9</field>
+        <field name="state">maintenance</field>
+    </record>
+
+    <record id="transport_trailer_13" model="transport.trailer">
+        <field name="license_plate">55 TR 013</field>
+        <field name="trailer_type">flatbed</field>
+        <field name="brand">Lohr</field>
+        <field name="model_year">2023</field>
+        <field name="axle_count">3</field>
+        <field name="max_payload">26000</field>
+        <field name="capacity">10</field>
+        <field name="state">available</field>
+    </record>
+
+</odoo>

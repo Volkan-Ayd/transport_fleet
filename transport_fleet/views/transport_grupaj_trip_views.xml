@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transport_grupaj_trip_view_list" model="ir.ui.view">
+        <field name="name">transport.grupaj.trip.list</field>
+        <field name="model">transport.grupaj.trip</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'done'" decoration-info="state == 'confirmed'">
+                <field name="name"/>
+                <field name="activity_code"/>
+                <field name="grupaj_no"/>
+                <field name="start_date"/>
+                <field name="vehicle_id" string="Çekici Plaka"/>
+                <field name="subcontractor_tractor_plate"/>
+                <field name="route_info"/>
+                <field name="route_continent" optional="show" widget="badge"
+                       decoration-info="route_continent == 'europe'"
+                       decoration-success="route_continent == 'asia'"
+                       decoration-warning="route_continent == 'both'"/>
+                <field name="quantity"/>
+                <field name="activity_group_name"/>
+                <field name="km"/>
+                <field name="driver_id" optional="show"/>
+                <field name="partner_id" optional="show"/>
+                <field name="firma" optional="hide"/>
+                <field name="vehicle_coefficient" optional="hide"/>
+                <field name="extra_km" optional="hide"/>
+                <field name="invoice_status" optional="hide"/>
+                <field name="mt" optional="hide"/>
+                <field name="amount_total" optional="show" sum="Toplam"/>
+                <field name="order_id" optional="show"/>
+                <field name="billing_status" widget="badge" optional="show"
+                       decoration-warning="billing_status == 'not_invoiced'"
+                       decoration-info="billing_status == 'partial'"
+                       decoration-success="billing_status == 'invoiced'"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'draft'"
+                       decoration-info="state == 'confirmed'"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="transport_grupaj_trip_view_form" model="ir.ui.view">
+        <field name="name">transport.grupaj.trip.form</field>
+        <field name="model">transport.grupaj.trip</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_complete" string="Seferi Tamamla" type="object"
+                            class="oe_highlight" invisible="state != 'confirmed'"/>
+                    <button name="action_create_or_update_order" string="Siparişi Güncelle" type="object"
+                            invisible="state != 'done' or not order_id"
+                            confirm="Sipariş, güncel Miktar x Km x Araç Katsayısı tutarına göre yeniden hesaplanacak. Devam edilsin mi?"/>
+                    <button name="action_open_expense_wizard" string="Masraf Ekle" type="object"
+                            invisible="state not in ('confirmed', 'done')"/>
+                    <button name="action_open_fuel_wizard" string="Yakıt Ekle" type="object"
+                            invisible="state not in ('confirmed', 'done')"/>
+                    <button name="action_open_damage_wizard" string="Hasar Ekle" type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Faturalandı" bg_color="text-bg-success"
+                            invisible="billing_status != 'invoiced'"/>
+                    <widget name="web_ribbon" title="Kısmi Faturalandı" bg_color="text-bg-warning"
+                            invisible="billing_status != 'partial'"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_lead" type="object" class="oe_stat_button"
+                                icon="fa-handshake-o" invisible="not lead_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Teklif</span>
+                            </div>
+                        </button>
+                        <button name="action_open_order" type="object" class="oe_stat_button"
+                                icon="fa-file-text-o" invisible="not order_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Sipariş</span>
+                            </div>
+                        </button>
+                        <button name="%(transport_driver_earning_action)d" type="action"
+                                class="oe_stat_button" icon="fa-money"
+                                context="{'search_default_grupaj_trip_id': id}"
+                                invisible="not driver_earning_count">
+                            <field name="driver_earning_count" widget="statinfo" string="Şoför Hakedişi"/>
+                        </button>
+                        <button name="%(transport_trip_fuel_action)d" type="action"
+                                class="oe_stat_button" icon="fa-tint"
+                                context="{'search_default_grupaj_trip_id': id}"
+                                invisible="not fuel_count">
+                            <field name="fuel_count" widget="statinfo" string="Yakıt"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Grupaj Bilgisi">
+                            <field name="grupaj_no"/>
+                            <field name="activity_code"/>
+                            <field name="activity_group_name"/>
+                            <field name="firma"/>
+                            <field name="partner_id" invisible="not partner_id"/>
+                            <field name="start_date"/>
+                        </group>
+                        <group string="Araç / Rota">
+                            <field name="vehicle_id"/>
+                            <field name="driver_id" readonly="1"/>
+                            <field name="subcontractor_tractor_plate"/>
+                            <field name="route_info"/>
+                            <field name="route_continent" widget="badge"
+                                   invisible="not route_continent"
+                                   decoration-info="route_continent == 'europe'"
+                                   decoration-success="route_continent == 'asia'"
+                                   decoration-warning="route_continent == 'both'"/>
+                            <field name="mt"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Miktar / Mesafe">
+                            <field name="quantity"/>
+                            <field name="km"/>
+                            <field name="vehicle_coefficient"/>
+                            <field name="extra_km"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_total"/>
+                        </group>
+                        <group string="Diğer">
+                            <field name="billing_status" widget="badge"
+                                   decoration-warning="billing_status == 'not_invoiced'"
+                                   decoration-info="billing_status == 'partial'"
+                                   decoration-success="billing_status == 'invoiced'"/>
+                            <field name="invoice_status"/>
+                            <field name="start_datetime" invisible="not start_datetime"/>
+                            <field name="end_datetime" invisible="not end_datetime"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_grupaj_trip_view_search" model="ir.ui.view">
+        <field name="name">transport.grupaj.trip.search</field>
+        <field name="model">transport.grupaj.trip</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="grupaj_no"/>
+                <field name="vehicle_id"/>
+                <field name="partner_id"/>
+                <field name="route_info"/>
+                <filter name="confirmed" string="Devam Eden" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="done" string="Tamamlanan" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter name="not_invoiced" string="Faturalanmadı" domain="[('billing_status', '=', 'not_invoiced')]"/>
+                <filter name="invoiced" string="Faturalandı" domain="[('billing_status', '=', 'invoiced')]"/>
+                <separator/>
+                <group>
+                    <filter name="group_vehicle" string="Çekici" context="{'group_by': 'vehicle_id'}"/>
+                    <filter name="group_partner" string="Müşteri" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_state" string="Durum" context="{'group_by': 'state'}"/>
+                    <filter name="group_billing" string="Fatura Durumu" context="{'group_by': 'billing_status'}"/>
+                    <filter name="group_route_continent" string="Rota Kıtası" context="{'group_by': 'route_continent'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="transport_grupaj_trip_action" model="ir.actions.act_window">
+        <field name="name">Grupaj Seferleri</field>
+        <field name="res_model">transport.grupaj.trip</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

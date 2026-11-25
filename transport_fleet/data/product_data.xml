@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_transport_service" model="product.template">
+        <field name="name">Araç Nakliye Hizmeti (Araç Başı)</field>
+        <field name="type">service</field>
+        <field name="invoice_policy">order</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="list_price">3500</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+    </record>
+
+    <record id="product_transport_service_km" model="product.template">
+        <field name="name">Araç Nakliye Hizmeti (Km Başı)</field>
+        <field name="type">service</field>
+        <field name="invoice_policy">order</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="list_price">12</field>
+        <field name="uom_id" ref="uom.product_uom_km"/>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+    </record>
+
+    <record id="product_transport_service_grupaj" model="product.template">
+        <field name="name">Grupaj Nakliye Hizmeti</field>
+        <field name="type">service</field>
+        <field name="invoice_policy">order</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="list_price">0</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+    </record>
+
+    <record id="product_transport_europe_crossing" model="product.template">
+        <field name="name">Avrupa Geçiş</field>
+        <field name="type">service</field>
+        <field name="invoice_policy">order</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="list_price">0</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+    </record>
+
+    <record id="product_transport_loading_unloading" model="product.template">
+        <field name="name">İndirme-Bindirme</field>
+        <field name="type">service</field>
+        <field name="invoice_policy">order</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="list_price">0</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+    </record>
+
+    <record id="product_transport_expense" model="product.template">
+        <field name="name">Araç Masrafı (Yol Üstü Bakım/Arıza)</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="list_price">0</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="purchase_ok" eval="True"/>
+    </record>
+</odoo>

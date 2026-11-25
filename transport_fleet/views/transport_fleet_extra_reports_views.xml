@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================= Müşteri Bazlı Ciro (Araç/Şoför Kârlılık Analizi verisini
+         müşteri kırılımıyla yeniden kullanır - ayrı bir model gerekmez) ================= -->
+    <record id="transport_customer_revenue_report_view_pivot" model="ir.ui.view">
+        <field name="name">transport.vehicle.profitability.report.pivot.customer</field>
+        <field name="model">transport.vehicle.profitability.report</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="partner_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="revenue" type="measure"/>
+                <field name="net_profit" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="transport_customer_revenue_report_view_graph" model="ir.ui.view">
+        <field name="name">transport.vehicle.profitability.report.graph.customer</field>
+        <field name="model">transport.vehicle.profitability.report</field>
+        <field name="arch" type="xml">
+            <graph type="bar" string="Müşteri Bazlı Ciro">
+                <field name="partner_id" type="row"/>
+                <field name="revenue" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="transport_customer_revenue_report_action" model="ir.actions.act_window">
+        <field name="name">Müşteri Bazlı Ciro</field>
+        <field name="res_model">transport.vehicle.profitability.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="transport_vehicle_profitability_report_view_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('transport_customer_revenue_report_view_pivot')}),
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('transport_customer_revenue_report_view_graph')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('transport_vehicle_profitability_report_view_list')})]"/>
+        <field name="context">{'search_default_group_partner': 1}</field>
+    </record>
+
+    <!-- ================= Şoför Hakediş Özeti ================= -->
+    <record id="transport_driver_earning_summary_view_pivot" model="ir.ui.view">
+        <field name="name">transport.driver.earning.pivot.summary</field>
+        <field name="model">transport.driver.earning</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="driver_id" type="row"/>
+                <field name="payment_state" type="col"/>
+                <field name="amount" type="measure"/>
+                <field name="distance_km" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="transport_driver_earning_summary_view_graph" model="ir.ui.view">
+        <field name="name">transport.driver.earning.graph.summary</field>
+        <field name="model">transport.driver.earning</field>
+        <field name="arch" type="xml">
+            <graph type="bar" string="Şoför Hakediş Özeti">
+                <field name="driver_id" type="row"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="transport_driver_earning_summary_action" model="ir.actions.act_window">
+        <field name="name">Şoför Hakediş Özeti</field>
+        <field name="res_model">transport.driver.earning</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('transport_driver_earning_summary_view_pivot')}),
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('transport_driver_earning_summary_view_graph')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('transport_driver_earning_view_list')})]"/>
+        <field name="context">{'search_default_group_driver': 1}</field>
+    </record>
+
+    <!-- ================= Masraf Dağılımı (Masraf İadesi türündeki hakedişler, masraf
+         türüne ve ödeme yöntemine göre) ================= -->
+    <record id="transport_expense_breakdown_view_pivot" model="ir.ui.view">
+        <field name="name">transport.driver.earning.pivot.expense</field>
+        <field name="model">transport.driver.earning</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="service_type_id" type="row"/>
+                <field name="payment_state" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="transport_expense_breakdown_view_graph" model="ir.ui.view">
+        <field name="name">transport.driver.earning.graph.expense</field>
+        <field name="model">transport.driver.earning</field>
+        <field name="arch" type="xml">
+            <graph type="pie" string="Masraf Dağılımı">
+                <field name="service_type_id" type="row"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="transport_expense_breakdown_action" model="ir.actions.act_window">
+        <field name="name">Masraf Dağılımı</field>
+        <field name="res_model">transport.driver.earning</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('transport_expense_breakdown_view_pivot')}),
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('transport_expense_breakdown_view_graph')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('transport_driver_earning_view_list')})]"/>
+        <field name="domain">[('earning_type', '=', 'expense')]</field>
+        <field name="context">{'search_default_group_driver': 0}</field>
+    </record>
+
+    <!-- ================= HGS Maliyet Raporu ================= -->
+    <record id="transport_hgs_cost_report_view_pivot" model="ir.ui.view">
+        <field name="name">transport.hgs.record.pivot.cost</field>
+        <field name="model">transport.hgs.record</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="vehicle_id" type="row"/>
+                <field name="entry_date" interval="month" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="transport_hgs_cost_report_view_graph" model="ir.ui.view">
+        <field name="name">transport.hgs.record.graph.cost</field>
+        <field name="model">transport.hgs.record</field>
+        <field name="arch" type="xml">
+            <graph type="bar" string="HGS Maliyet Raporu">
+                <field name="vehicle_id" type="row"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="transport_hgs_cost_report_action" model="ir.actions.act_window">
+        <field name="name">HGS Maliyet Raporu</field>
+        <field name="res_model">transport.hgs.record</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('transport_hgs_cost_report_view_pivot')}),
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('transport_hgs_cost_report_view_graph')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('transport_hgs_record_view_list')})]"/>
+        <field name="context">{'search_default_group_vehicle': 1}</field>
+    </record>
+
+    <!-- ================= Belge Son Kullanma Takibi ================= -->
+    <record id="transport_document_expiry_view_list" model="ir.ui.view">
+        <field name="name">transport.document.expiry.list</field>
+        <field name="model">transport.document</field>
+        <field name="arch" type="xml">
+            <list create="false" delete="false"
+                  decoration-danger="status == 'expired'" decoration-warning="status == 'expiring'">
+                <field name="name"/>
+                <field name="owner_type"/>
+                <field name="owner_name"/>
+                <field name="doc_type"/>
+                <field name="reference" optional="show"/>
+                <field name="expiry_date"/>
+                <field name="responsible_id" optional="show"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'valid'"
+                       decoration-warning="status == 'expiring'"
+                       decoration-danger="status == 'expired'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="transport_document_expiry_view_pivot" model="ir.ui.view">
+        <field name="name">transport.document.expiry.pivot</field>
+        <field name="model">transport.document</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="doc_type" type="row"/>
+                <field name="status" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="transport_document_expiry_view_search" model="ir.ui.view">
+        <field name="name">transport.document.expiry.search</field>
+        <field name="model">transport.document</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="owner_name"/>
+                <field name="doc_type"/>
+                <field name="reference"/>
+                <filter name="expired" string="Süresi Dolmuş" domain="[('status', '=', 'expired')]"/>
+                <filter name="expiring" string="Süresi Yaklaşıyor" domain="[('status', '=', 'expiring')]"/>
+                <separator/>
+                <group>
+                    <filter name="group_owner_type" string="Sahip Tipi" context="{'group_by': 'owner_type'}"/>
+                    <filter name="group_doc_type" string="Belge Türü" context="{'group_by': 'doc_type'}"/>
+                    <filter name="group_status" string="Durum" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="transport_document_expiry_action" model="ir.actions.act_window">
+        <field name="name">Belge Son Kullanma Takibi</field>
+        <field name="res_model">transport.document</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('transport_document_expiry_view_list')}),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('transport_document_expiry_view_pivot')}),
+            (0, 0, {'view_mode': 'form'})]"/>
+        <field name="search_view_id" ref="transport_document_expiry_view_search"/>
+        <field name="context">{'search_default_expired': 1, 'search_default_expiring': 1}</field>
+    </record>
+</odoo>

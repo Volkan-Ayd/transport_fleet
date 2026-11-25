@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_transport_root" name="Taşımacılık" parent="fleet.menu_root" sequence="20"/>
+    <menuitem id="menu_transport_root" name="Taşımacılık" parent="fleet.menu_root"
+              action="transport_vehicle_action" sequence="1"/>
     <menuitem id="menu_transport_vehicles" name="Çekiciler / Araçlar" parent="menu_transport_root"
               action="transport_vehicle_action" sequence="10"/>
     <menuitem id="menu_transport_trailers" name="Dorseler" parent="menu_transport_root"
@@ -9,4 +10,40 @@
               action="transport_driver_action" sequence="30"/>
     <menuitem id="menu_transport_documents" name="Belgeler" parent="menu_transport_root"
               action="transport_document_action" sequence="40"/>
+    <menuitem id="menu_transport_trips" name="Seferler" parent="menu_transport_root"
+              action="transport_trip_action" sequence="50"/>
+    <menuitem id="menu_transport_grupaj_trips" name="Grupaj Seferleri" parent="menu_transport_root"
+              action="transport_grupaj_trip_action" sequence="55"/>
+    <menuitem id="menu_transport_driver_earnings" name="Şoför Hakedişleri" parent="menu_transport_root"
+              action="transport_driver_earning_action" sequence="60"/>
+    <menuitem id="menu_transport_trip_fuel" name="Yakıt İşlemleri" parent="menu_transport_root"
+              action="transport_trip_fuel_action" sequence="70"/>
+    <menuitem id="menu_transport_hgs_record" name="HGS Geçişleri" parent="menu_transport_root"
+              action="transport_hgs_record_action" sequence="80"/>
+    <menuitem id="menu_transport_reconciliation" name="Müşteri Km Mutabakatı" parent="menu_transport_root"
+              action="transport_reconciliation_line_action" sequence="85"/>
+    <menuitem id="menu_transport_address_lookup" name="İl/İlçe/Mahalle Referansı" parent="menu_transport_root"
+              action="transport_address_lookup_action" sequence="87"/>
+    <menuitem id="menu_transport_reports" name="Raporlar" parent="menu_transport_root" sequence="90"/>
+    <menuitem id="menu_transport_vehicle_profitability_report" name="Araç/Şoför Kârlılık Analizi"
+              parent="menu_transport_reports" action="transport_vehicle_profitability_report_action"
+              sequence="10"/>
+    <menuitem id="menu_transport_fuel_efficiency_report" name="Yakıt Verimliliği"
+              parent="menu_transport_reports" action="transport_fuel_efficiency_report_action"
+              sequence="20"/>
+    <menuitem id="menu_transport_customer_revenue_report" name="Müşteri Bazlı Ciro"
+              parent="menu_transport_reports" action="transport_customer_revenue_report_action"
+              sequence="30"/>
+    <menuitem id="menu_transport_driver_earning_summary" name="Şoför Hakediş Özeti"
+              parent="menu_transport_reports" action="transport_driver_earning_summary_action"
+              sequence="40"/>
+    <menuitem id="menu_transport_expense_breakdown" name="Masraf Dağılımı"
+              parent="menu_transport_reports" action="transport_expense_breakdown_action"
+              sequence="50"/>
+    <menuitem id="menu_transport_hgs_cost_report" name="HGS Maliyet Raporu"
+              parent="menu_transport_reports" action="transport_hgs_cost_report_action"
+              sequence="60"/>
+    <menuitem id="menu_transport_document_expiry_report" name="Belge Son Kullanma Takibi"
+              parent="menu_transport_reports" action="transport_document_expiry_action"
+              sequence="70"/>
 </odoo>

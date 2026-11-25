@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="transport_partner_netlog" model="res.partner">
+        <field name="name">NETLOG</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">İzmir</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="phone">+90 232 444 20 20</field>
+        <field name="email">info@netlog.example.com</field>
+    </record>
+
+    <record id="transport_crm_lead_azure_multi" model="crm.lead">
+        <field name="name">Azure Interior - 4 Araç Nakliye Teklifi</field>
+        <field name="type">opportunity</field>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="stage_id" ref="crm.stage_lead3"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="expected_revenue">14000</field>
+        <field name="description"><![CDATA[<p>Taşınacak araç şasi numaraları (4 adet, aşağıdaki tabloda).</p>]]></field>
+    </record>
+
+    <record id="transport_crm_lead_azure_multi_chassis_1" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_azure_multi"/>
+        <field name="chassis_number">WBA8E9G50JC400001</field>
+    </record>
+    <record id="transport_crm_lead_azure_multi_chassis_2" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_azure_multi"/>
+        <field name="chassis_number">WBA8E9G50JC400002</field>
+    </record>
+    <record id="transport_crm_lead_azure_multi_chassis_3" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_azure_multi"/>
+        <field name="chassis_number">VF3MJAHZH12400003</field>
+    </record>
+    <record id="transport_crm_lead_azure_multi_chassis_4" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_azure_multi"/>
+        <field name="chassis_number">VF3MJAHZH12400004</field>
+    </record>
+
+    <record id="transport_crm_lead_netlog" model="crm.lead">
+        <field name="name">NETLOG - 3 Araç Nakliye Teklifi</field>
+        <field name="type">opportunity</field>
+        <field name="partner_id" ref="transport_partner_netlog"/>
+        <field name="stage_id" ref="crm.stage_lead3"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="expected_revenue">10500</field>
+        <field name="description"><![CDATA[<p>Taşınacak araç şasi numaraları (3 adet, aşağıdaki tabloda).</p>]]></field>
+    </record>
+
+    <record id="transport_crm_lead_netlog_chassis_1" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_netlog"/>
+        <field name="chassis_number">NMTKHAAX1KR300001</field>
+    </record>
+    <record id="transport_crm_lead_netlog_chassis_2" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_netlog"/>
+        <field name="chassis_number">NMTKHAAX1KR300002</field>
+    </record>
+    <record id="transport_crm_lead_netlog_chassis_3" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_netlog"/>
+        <field name="chassis_number">NMTKHAAX1KR300003</field>
+    </record>
+
+</odoo>

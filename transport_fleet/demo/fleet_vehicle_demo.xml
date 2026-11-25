@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="transport_vehicle_1" model="fleet.vehicle">
+        <field name="license_plate">34 ABC 123</field>
+        <field name="model_id" ref="transport_model_mercedes_actros"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">on_trip</field>
+        <field name="transport_driver_id" ref="transport_driver_mehmet"/>
+        <field name="current_trailer_id" ref="transport_trailer_1"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">24000</field>
+        <field name="gross_weight">40000</field>
+        <field name="fuel_tank_capacity">750</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS3412345</field>
+    </record>
+
+    <record id="transport_vehicle_2" model="fleet.vehicle">
+        <field name="license_plate">35 DEF 456</field>
+        <field name="model_id" ref="transport_model_volvo_fh"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">available</field>
+        <field name="transport_driver_id" ref="transport_driver_ali"/>
+        <field name="current_trailer_id" ref="transport_trailer_2"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">22000</field>
+        <field name="gross_weight">40000</field>
+        <field name="fuel_tank_capacity">780</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS3556789</field>
+    </record>
+
+    <record id="transport_vehicle_3" model="fleet.vehicle">
+        <field name="license_plate">06 GHI 789</field>
+        <field name="model_id" ref="transport_model_renault_t"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">maintenance</field>
+        <field name="transport_driver_id" ref="transport_driver_hasan"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">23000</field>
+        <field name="gross_weight">40000</field>
+        <field name="fuel_tank_capacity">700</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS0612233</field>
+    </record>
+
+    <record id="transport_vehicle_4" model="fleet.vehicle">
+        <field name="license_plate">16 JKL 321</field>
+        <field name="model_id" ref="transport_model_ford_cargo"/>
+        <field name="transport_type">truck</field>
+        <field name="transport_state">available</field>
+        <field name="transport_driver_id" ref="transport_driver_ahmet"/>
+        <field name="axle_count">2</field>
+        <field name="max_payload">9000</field>
+        <field name="gross_weight">18000</field>
+        <field name="fuel_tank_capacity">300</field>
+        <field name="is_adr" eval="True"/>
+        <field name="hgs_tag">HGS1698765</field>
+    </record>
+
+    <record id="transport_vehicle_5" model="fleet.vehicle">
+        <field name="license_plate">34 PQR 777</field>
+        <field name="model_id" ref="transport_model_mercedes_actros"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">returning</field>
+        <field name="transport_driver_id" ref="transport_driver_mustafa"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">24000</field>
+        <field name="gross_weight">40000</field>
+        <field name="fuel_tank_capacity">750</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS3477712</field>
+    </record>
+
+    <record id="transport_vehicle_6" model="fleet.vehicle">
+        <field name="license_plate">06 MNK 601</field>
+        <field name="model_id" ref="transport_model_isuzu_giga"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">available</field>
+        <field name="transport_driver_id" ref="transport_driver_huseyin"/>
+        <field name="current_trailer_id" ref="transport_trailer_4"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">21000</field>
+        <field name="gross_weight">38000</field>
+        <field name="fuel_tank_capacity">650</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS0660101</field>
+    </record>
+
+    <record id="transport_vehicle_7" model="fleet.vehicle">
+        <field name="license_plate">16 OPQ 602</field>
+        <field name="model_id" ref="transport_model_mercedes_actros"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">available</field>
+        <field name="transport_driver_id" ref="transport_driver_osman"/>
+        <field name="current_trailer_id" ref="transport_trailer_5"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">24000</field>
+        <field name="gross_weight">40000</field>
+        <field name="fuel_tank_capacity">750</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS1660202</field>
+    </record>
+
+    <record id="transport_vehicle_8" model="fleet.vehicle">
+        <field name="license_plate">35 RST 603</field>
+        <field name="model_id" ref="transport_model_volvo_fh"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">on_trip</field>
+        <field name="transport_driver_id" ref="transport_driver_kemal"/>
+        <field name="current_trailer_id" ref="transport_trailer_6"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">22000</field>
+        <field name="gross_weight">40000</field>
+        <field name="fuel_tank_capacity">780</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS3560303</field>
+    </record>
+
+    <record id="transport_vehicle_9" model="fleet.vehicle">
+        <field name="license_plate">42 UVW 604</field>
+        <field name="model_id" ref="transport_model_renault_t"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">available</field>
+        <field name="transport_driver_id" ref="transport_driver_ibrahim"/>
+        <field name="current_trailer_id" ref="transport_trailer_7"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">23000</field>
+        <field name="gross_weight">40000</field>
+        <field name="fuel_tank_capacity">700</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS4260404</field>
+    </record>
+
+    <record id="transport_vehicle_10" model="fleet.vehicle">
+        <field name="license_plate">01 ABC 605</field>
+        <field name="model_id" ref="transport_model_ford_cargo"/>
+        <field name="transport_type">truck</field>
+        <field name="transport_state">available</field>
+        <field name="transport_driver_id" ref="transport_driver_yusuf"/>
+        <field name="axle_count">2</field>
+        <field name="max_payload">9000</field>
+        <field name="gross_weight">18000</field>
+        <field name="fuel_tank_capacity">300</field>
+        <field name="is_adr" eval="True"/>
+        <field name="hgs_tag">HGS0160505</field>
+    </record>
+
+    <record id="transport_vehicle_11" model="fleet.vehicle">
+        <field name="license_plate">27 DEF 606</field>
+        <field name="model_id" ref="transport_model_isuzu_giga"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">available</field>
+        <field name="transport_driver_id" ref="transport_driver_murat"/>
+        <field name="current_trailer_id" ref="transport_trailer_8"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">21000</field>
+        <field name="gross_weight">38000</field>
+        <field name="fuel_tank_capacity">650</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS2760606</field>
+    </record>
+
+    <record id="transport_vehicle_12" model="fleet.vehicle">
+        <field name="license_plate">61 GHI 607</field>
+        <field name="model_id" ref="transport_model_mercedes_actros"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">available</field>
+        <field name="transport_driver_id" ref="transport_driver_serkan"/>
+        <field name="current_trailer_id" ref="transport_trailer_9"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">24000</field>
+        <field name="gross_weight">40000</field>
+        <field name="fuel_tank_capacity">750</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS6160707</field>
+    </record>
+
+    <record id="transport_vehicle_13" model="fleet.vehicle">
+        <field name="license_plate">44 JKL 608</field>
+        <field name="model_id" ref="transport_model_volvo_fh"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">on_trip</field>
+        <field name="transport_driver_id" ref="transport_driver_emre"/>
+        <field name="current_trailer_id" ref="transport_trailer_10"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">22000</field>
+        <field name="gross_weight">40000</field>
+        <field name="fuel_tank_capacity">780</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS4460808</field>
+    </record>
+
+    <record id="transport_vehicle_14" model="fleet.vehicle">
+        <field name="license_plate">55 MNO 609</field>
+        <field name="model_id" ref="transport_model_renault_t"/>
+        <field name="transport_type">tractor</field>
+        <field name="transport_state">available</field>
+        <field name="transport_driver_id" ref="transport_driver_tolga"/>
+        <field name="current_trailer_id" ref="transport_trailer_11"/>
+        <field name="axle_count">3</field>
+        <field name="max_payload">23000</field>
+        <field name="gross_weight">40000</field>
+        <field name="fuel_tank_capacity">700</field>
+        <field name="is_adr" eval="False"/>
+        <field name="hgs_tag">HGS5560909</field>
+    </record>
+
+    <record id="transport_vehicle_15" model="fleet.vehicle">
+        <field name="license_plate">34 PQR 610</field>
+        <field name="model_id" ref="transport_model_ford_cargo"/>
+        <field name="transport_type">truck</field>
+        <field name="transport_state">maintenance</field>
+        <field name="transport_driver_id" ref="transport_driver_burak"/>
+        <field name="current_trailer_id" ref="transport_trailer_12"/>
+        <field name="axle_count">2</field>
+        <field name="max_payload">9000</field>
+        <field name="gross_weight">18000</field>
+        <field name="fuel_tank_capacity">300</field>
+        <field name="is_adr" eval="True"/>
+        <field name="hgs_tag">HGS3461010</field>
+    </record>
+
+</odoo>

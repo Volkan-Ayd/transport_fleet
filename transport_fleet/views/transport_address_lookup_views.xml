@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transport_address_lookup_view_list" model="ir.ui.view">
+        <field name="name">transport.address.lookup.list</field>
+        <field name="model">transport.address.lookup</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="province"/>
+                <field name="district"/>
+                <field name="subdistrict" optional="hide"/>
+                <field name="neighborhood"/>
+                <field name="postal_code"/>
+                <field name="continent" widget="badge"
+                       decoration-info="continent == 'europe'"
+                       decoration-success="continent == 'asia'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="transport_address_lookup_view_search" model="ir.ui.view">
+        <field name="name">transport.address.lookup.search</field>
+        <field name="model">transport.address.lookup</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="province"/>
+                <field name="district"/>
+                <field name="neighborhood"/>
+                <field name="postal_code"/>
+                <filter name="europe" string="Avrupa" domain="[('continent', '=', 'europe')]"/>
+                <filter name="asia" string="Asya" domain="[('continent', '=', 'asia')]"/>
+                <group>
+                    <filter name="group_province" string="İl" context="{'group_by': 'province'}"/>
+                    <filter name="group_district" string="İlçe" context="{'group_by': 'district'}"/>
+                    <filter name="group_continent" string="Kıta" context="{'group_by': 'continent'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="transport_address_lookup_action" model="ir.actions.act_window">
+        <field name="name">İl/İlçe/Mahalle Referansı</field>
+        <field name="res_model">transport.address.lookup</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_group_province': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smart_action">
+                Türkiye'nin tüm il/ilçe/mahalle/posta kodu referans verisi. Bu liste, gelen CRM
+                taleplerindeki e-postalarda alım/varış yeri (il, ilçe) otomatik yakalanırken
+                kullanılır.
+            </p>
+        </field>
+    </record>
+</odoo>

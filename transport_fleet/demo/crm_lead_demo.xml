@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="transport_crm_lead_1" model="crm.lead">
+        <field name="name">Azure Interior - İstanbul - Ankara Mobilya Nakliyesi Talebi</field>
+        <field name="type">lead</field>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="description">34 ABC 123 plakalı çekici ve tenteli dorse ile haftada 2 sefer İstanbul - Ankara mobilya nakliyesi talep edildi.</field>
+        <field name="expected_revenue">15000</field>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="date_open" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
+    </record>
+
+</odoo>

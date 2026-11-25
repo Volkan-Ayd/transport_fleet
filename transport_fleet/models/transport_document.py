@@ -59,7 +59,9 @@ class TransportDocument(models.Model):
         ('valid', 'Geçerli'),
         ('expiring', 'Süresi Yaklaşıyor'),
         ('expired', 'Süresi Dolmuş'),
-    ], compute='_compute_status', string='Durum')
+    ], compute='_compute_status', store=True, string='Durum',
+        help='Tarihe bağlı olduğu için günlük "Belge bitiş kontrolü" cron\'u tarafından '
+             'yeniden hesaplanır; aynı gün içinde elle tetiklemek için kaydı kaydetmek yeterlidir.')
     responsible_id = fields.Many2one('res.users', string='Sorumlu',
                                      default=lambda self: self.env.user)
     attachment_ids = fields.Many2many('ir.attachment', string='Ekler')
@@ -117,8 +119,11 @@ class TransportDocument(models.Model):
 
     @api.model
     def _cron_check_expiry(self):
-        """Süresi yaklaşan / dolan belgeler için sorumluya bir kez aktivite oluşturur."""
+        """Süresi yaklaşan / dolan belgeler için sorumluya bir kez aktivite oluşturur. Status
+        tarihe (bugüne) bağlı olduğu için store=True olsa da zamanla kendiliğinden güncellenmez;
+        burada önce tüm belgelerin durumunu zorla yeniden hesaplatıyoruz."""
         docs = self.search([('expiry_date', '!=', False)])
+        docs.invalidate_recordset(['status'])
         for doc in docs:
             if doc.status == 'valid' or doc.last_alert_status == doc.status:
                 continue

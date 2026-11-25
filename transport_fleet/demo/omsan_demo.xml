@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="transport_partner_omsan" model="res.partner">
+        <field name="name">OMSAN</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">İstanbul</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="phone">+90 212 444 06 00</field>
+        <field name="email">info@omsan.example.com</field>
+    </record>
+
+    <record id="transport_crm_lead_omsan" model="crm.lead">
+        <field name="name">OMSAN - Adana Araç Nakliyesi Teklifi</field>
+        <field name="type">opportunity</field>
+        <field name="partner_id" ref="transport_partner_omsan"/>
+        <field name="stage_id" ref="crm.stage_lead3"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="expected_revenue">24500</field>
+        <field name="description"><![CDATA[<p>Varış Yeri: Adana</p>
+<p>Taşınacak araç şasi numaraları (7 adet, aşağıdaki tabloda).</p>]]></field>
+        <field name="date_open" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
+    </record>
+
+    <record id="transport_crm_lead_omsan_chassis_1" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_omsan"/>
+        <field name="chassis_number">WVWZZZ1KZBW200001</field>
+    </record>
+    <record id="transport_crm_lead_omsan_chassis_2" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_omsan"/>
+        <field name="chassis_number">WVWZZZ1KZBW200002</field>
+    </record>
+    <record id="transport_crm_lead_omsan_chassis_3" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_omsan"/>
+        <field name="chassis_number">WDB9634031L700003</field>
+    </record>
+    <record id="transport_crm_lead_omsan_chassis_4" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_omsan"/>
+        <field name="chassis_number">WDB9634031L700004</field>
+    </record>
+    <record id="transport_crm_lead_omsan_chassis_5" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_omsan"/>
+        <field name="chassis_number">YV2RT40A9LB200005</field>
+    </record>
+    <record id="transport_crm_lead_omsan_chassis_6" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_omsan"/>
+        <field name="chassis_number">YV2RT40A9LB200006</field>
+    </record>
+    <record id="transport_crm_lead_omsan_chassis_7" model="crm.lead.chassis">
+        <field name="lead_id" ref="transport_crm_lead_omsan"/>
+        <field name="chassis_number">VF6TB1GE000200007</field>
+    </record>
+
+</odoo>

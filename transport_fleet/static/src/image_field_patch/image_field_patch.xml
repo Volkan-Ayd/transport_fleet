@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Odoo'nun yerleşik "zoom" seçeneği, görsele üzerine gelindiğinde ("hover") büyütme
+         göstermek için genel tooltip servisini kullanır. Dokunmatik (mobil) cihazlarda bu
+         servisin varsayılan davranışı "basılı tutunca göster" (hold-to-show) şeklindedir; tek
+         dokunuş (tap) hiçbir şey yapmaz. Şoförler masraf/arıza fotoğrafını telefondan eklediği
+         için, resme dokunduğunda hemen büyümesi gerekir. Bu yama, web.ImageField şablonundaki
+         <img/> etiketine data-tooltip-touch-tap-to-show="true" ekleyerek dokunmatik cihazlarda
+         da tek dokunuşla büyütmeyi açar (masraf ekleme ekranı ve şoför hakedişi fotoğrafı dahil,
+         "zoom: true" seçeneği kullanılan her yerde). -->
+    <t t-inherit="web.ImageField" t-inherit-mode="extension">
+        <xpath expr="//img[@t-att-data-tooltip-template]" position="attributes">
+            <attribute name="data-tooltip-touch-tap-to-show">true</attribute>
+        </xpath>
+    </t>
+
+</templates>

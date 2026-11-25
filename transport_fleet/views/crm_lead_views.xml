@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_chassis_view_list_bulk" model="ir.ui.view">
+        <field name="name">crm.lead.chassis.list.bulk</field>
+        <field name="model">crm.lead.chassis</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" multi_edit="1">
+                <field name="chassis_number" placeholder="Şasi numarasını okutun/yazın..."/>
+                <field name="vehicle_id" placeholder="Boşsa ana araç kullanılır"/>
+                <field name="pickup_location" optional="show" placeholder="Alım yeri"/>
+                <field name="destination" optional="show" placeholder="Varış yeri"/>
+                <field name="note" optional="show"/>
+                <field name="trip_id" optional="show" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="crm_lead_chassis_action_bulk" model="ir.actions.act_window">
+        <field name="name">Şasi Satırlarını Seç / Çoklu Araç Ata</field>
+        <field name="res_model">crm.lead.chassis</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="crm_lead_chassis_view_list_bulk"/>
+        <field name="domain">[('lead_id', '=', active_id)]</field>
+        <field name="context">{'default_lead_id': active_id}</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="crm_lead_chassis_action_create_trip" model="ir.actions.server">
+        <field name="name">Seçili Satırlardan Sefer Oluştur</field>
+        <field name="model_id" ref="model_crm_lead_chassis"/>
+        <field name="binding_model_id" ref="model_crm_lead_chassis"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_create_trip_from_selection()</field>
+    </record>
+
+    <record id="crm_lead_view_form_inherit_transport" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.transport</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_transport_trips" type="object" class="oe_stat_button"
+                        icon="fa-truck" invisible="not transport_trip_count">
+                    <field name="transport_trip_count" widget="statinfo" string="Sefer"/>
+                </button>
+            </div>
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="Taşımacılık" name="transport">
+                    <group>
+                        <group string="Araç Atama">
+                            <field name="transport_pricing_method" placeholder="Müşteri varsayılanı kullanılır"/>
+                            <field name="transport_vehicle_id" placeholder="Müsait veya dönüş yolundaki bir tır seçin..."/>
+                            <button name="action_suggest_vehicle" type="object"
+                                    string="Araç/Şoför Öner" class="btn-link mb-2 p-0"
+                                    invisible="transport_vehicle_id"/>
+                            <field name="transport_assignment_state" widget="badge"
+                                   decoration-warning="transport_assignment_state == 'pending'"
+                                   decoration-success="transport_assignment_state == 'assigned'"/>
+                            <field name="transport_trip_name" invisible="not transport_trip_name"/>
+                            <field name="transport_fuel_limit" placeholder="Örn. 300"/>
+                        </group>
+                        <group string="Atanan Araç Bilgisi" invisible="not transport_vehicle_id">
+                            <field name="transport_driver_id"/>
+                            <field name="transport_trailer_id"/>
+                        </group>
+                    </group>
+                    <separator string="Talep Edilen Şasi Numaraları"/>
+                    <p class="text-muted" invisible="transport_chassis_count &lt;= 1">
+                        Büyük bir talebi birkaç çekiciye bölmek için her satıra ayrı bir araç
+                        seçebilirsiniz. Bu listedeki satırlardan birden çoğunu tek seferde
+                        atamak için aşağıdaki "Satırları Seç / Çoklu Araç Ata" düğmesini
+                        kullanın: açılan pencerede satırların başındaki kutucuklarla seçim
+                        yapıp (örn. 8 satır), seçili satırlardan birine araç atadığınızda bu
+                        değer işaretli tüm satırlara uygulanır. Aynı pencerede, araç atadığınız
+                        satırları seçili tutup "Aksiyonlar" menüsünden "Seçili Satırlardan
+                        Sefer Oluştur"u kullanarak doğrudan sefer de başlatabilirsiniz. Boş
+                        bırakılan satırlar "Ana Araç Ata" alanındaki aracı kullanır.
+                    </p>
+                    <button name="%(crm_lead_chassis_action_bulk)d" type="action"
+                            string="Satırları Seç / Çoklu Araç Ata" class="btn-link mb-2"
+                            invisible="transport_chassis_count &lt;= 1"/>
+                    <field name="transport_chassis_ids" nolabel="1">
+                        <list editable="bottom" multi_edit="1">
+                            <field name="chassis_number" placeholder="Şasi numarasını okutun/yazın..."/>
+                            <field name="vehicle_id" placeholder="Boşsa ana araç kullanılır"/>
+                            <field name="pickup_location" optional="show" placeholder="Alım yeri"/>
+                            <field name="destination" optional="show" placeholder="Varış yeri"/>
+                            <field name="note" optional="show"/>
+                            <field name="trip_id" optional="show" readonly="1"/>
+                        </list>
+                    </field>
+                    <div class="oe_button_box">
+                        <button name="action_start_trip" string="Sefer Başlat (Teslim Al)" type="object"
+                                class="btn btn-primary" invisible="not transport_has_assignable_chassis"/>
+                    </div>
+                </page>
+                <page string="Grupaj" name="grupaj">
+                    <field name="grupaj_ids" nolabel="1">
+                        <list editable="bottom" decoration-danger="is_duplicate">
+                            <field name="firma" optional="show"/>
+                            <field name="activity_code" optional="show"/>
+                            <field name="grupaj_no"/>
+                            <field name="start_date"/>
+                            <field name="vehicle_id" placeholder="Çekici seçin..."/>
+                            <field name="subcontractor_tractor_plate" optional="hide"/>
+                            <field name="route_info"/>
+                            <field name="route_continent" optional="show" widget="badge"
+                                   decoration-info="route_continent == 'europe'"
+                                   decoration-success="route_continent == 'asia'"
+                                   decoration-warning="route_continent == 'both'"/>
+                            <field name="quantity"/>
+                            <field name="activity_group_name" optional="show"/>
+                            <field name="km"/>
+                            <field name="vehicle_coefficient" optional="show"/>
+                            <field name="extra_km" optional="hide"/>
+                            <field name="invoice_status" optional="hide"/>
+                            <field name="mt" optional="hide"/>
+                            <field name="trip_id" optional="hide" readonly="1"/>
+                            <field name="is_duplicate" column_invisible="1"/>
+                            <field name="duplicate_info" optional="show" readonly="1"
+                                   invisible="not is_duplicate"/>
+                            <button name="action_start_trip" type="object"
+                                    string="Sefer Başlat" icon="fa-truck"
+                                    invisible="trip_id"/>
+                            <button name="action_start_trip" type="object"
+                                    string="Seferi Aç" icon="fa-external-link"
+                                    invisible="not trip_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

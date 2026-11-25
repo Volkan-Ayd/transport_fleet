@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transport_hgs_record_view_list" model="ir.ui.view">
+        <field name="name">transport.hgs.record.list</field>
+        <field name="model">transport.hgs.record</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="expense_state == 'done'">
+                <field name="license_plate"/>
+                <field name="vehicle_id"/>
+                <field name="trip_id" optional="show"/>
+                <field name="trailer_plate" optional="hide"/>
+                <field name="hgs_card_no" optional="hide"/>
+                <field name="entry_date"/>
+                <field name="exit_date" optional="show"/>
+                <field name="entry_station" optional="show"/>
+                <field name="exit_station" optional="hide"/>
+                <field name="province" optional="hide"/>
+                <field name="district" optional="hide"/>
+                <field name="terminal" optional="hide"/>
+                <field name="vat_percent" optional="hide"/>
+                <field name="amount" sum="Toplam Tutar"/>
+                <field name="reference_no" optional="hide"/>
+                <field name="system_date" optional="hide"/>
+                <field name="invoice_no" optional="hide"/>
+                <field name="expense_state" widget="badge"
+                       decoration-warning="expense_state == 'pending'"
+                       decoration-success="expense_state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="transport_hgs_record_view_form" model="ir.ui.view">
+        <field name="name">transport.hgs.record.form</field>
+        <field name="model">transport.hgs.record</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_create_expense" string="Masraf Oluştur" type="object"
+                            class="oe_highlight" invisible="expense_state != 'pending'"/>
+                    <field name="expense_state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_move" type="object" class="oe_stat_button"
+                                icon="fa-file-text-o" invisible="not move_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Yevmiye Fişi</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="Araç">
+                            <field name="license_plate"/>
+                            <field name="vehicle_id" readonly="1"/>
+                            <field name="trip_id" readonly="1" invisible="not trip_id"/>
+                            <field name="trailer_plate"/>
+                            <field name="hgs_card_no"/>
+                        </group>
+                        <group string="Geçiş">
+                            <field name="entry_date"/>
+                            <field name="exit_date"/>
+                            <field name="entry_station"/>
+                            <field name="exit_station"/>
+                            <field name="province"/>
+                            <field name="district"/>
+                            <field name="terminal"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Tutar">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="vat_percent"/>
+                            <field name="amount"/>
+                        </group>
+                        <group string="Referans">
+                            <field name="reference_no"/>
+                            <field name="system_date"/>
+                            <field name="invoice_no"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_hgs_record_view_search" model="ir.ui.view">
+        <field name="name">transport.hgs.record.search</field>
+        <field name="model">transport.hgs.record</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="license_plate"/>
+                <field name="vehicle_id"/>
+                <field name="reference_no"/>
+                <field name="invoice_no"/>
+                <filter name="pending" string="Beklemede" domain="[('expense_state', '=', 'pending')]"/>
+                <filter name="done" string="Masraf Oluşturuldu" domain="[('expense_state', '=', 'done')]"/>
+                <filter name="unmatched" string="Araç Eşleşmedi" domain="[('vehicle_id', '=', False)]"/>
+                <separator/>
+                <group>
+                    <filter name="group_vehicle" string="Araç" context="{'group_by': 'vehicle_id'}"/>
+                    <filter name="group_trip" string="Sefer" context="{'group_by': 'trip_id'}"/>
+                    <filter name="group_state" string="Masraf Durumu" context="{'group_by': 'expense_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="transport_hgs_record_action" model="ir.actions.act_window">
+        <field name="name">HGS Geçişleri</field>
+        <field name="res_model">transport.hgs.record</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_pending': 1}</field>
+    </record>
+
+    <record id="transport_hgs_record_action_create_expense" model="ir.actions.server">
+        <field name="name">Masraf Oluştur</field>
+        <field name="model_id" ref="model_transport_hgs_record"/>
+        <field name="binding_model_id" ref="model_transport_hgs_record"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_create_expense()</field>
+    </record>
+</odoo>
