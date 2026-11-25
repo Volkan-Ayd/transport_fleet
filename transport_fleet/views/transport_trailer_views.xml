@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transport_trailer_view_list" model="ir.ui.view">
+        <field name="name">transport.trailer.list</field>
+        <field name="model">transport.trailer</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'breakdown'" decoration-warning="state == 'maintenance'">
+                <field name="license_plate"/>
+                <field name="trailer_type"/>
+                <field name="brand" optional="show"/>
+                <field name="max_payload" optional="show"/>
+                <field name="volume_m3" optional="hide"/>
+                <field name="tractor_id"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'available'"
+                       decoration-info="state == 'on_trip'"
+                       decoration-warning="state == 'maintenance'"
+                       decoration-danger="state == 'breakdown'"/>
+                <field name="expiring_document_count" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="transport_trailer_view_form" model="ir.ui.view">
+        <field name="name">transport.trailer.form</field>
+        <field name="model">transport.trailer</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_documents" type="object" class="oe_stat_button"
+                                icon="fa-file-text-o">
+                            <field name="expiring_document_count" widget="statinfo" string="Uyarılı Belge"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Arşivlendi" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="license_plate"/>
+                        <h1><field name="license_plate" placeholder="35 ABC 123"/></h1>
+                    </div>
+                    <group>
+                        <group string="Genel">
+                            <field name="trailer_type"/>
+                            <field name="brand"/>
+                            <field name="model_year"/>
+                            <field name="tractor_id"/>
+                            <field name="tractor_ids" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Kapasite">
+                            <field name="axle_count"/>
+                            <field name="max_payload"/>
+                            <field name="volume_m3"/>
+                            <field name="length_m"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Belgeler" name="documents">
+                            <field name="document_ids" context="{'default_owner_type': 'trailer'}">
+                                <list decoration-danger="status == 'expired'" decoration-warning="status == 'expiring'">
+                                    <field name="owner_type" column_invisible="1"/>
+                                    <field name="doc_type"/>
+                                    <field name="reference"/>
+                                    <field name="expiry_date"/>
+                                    <field name="status" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Not" name="note">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_trailer_view_search" model="ir.ui.view">
+        <field name="name">transport.trailer.search</field>
+        <field name="model">transport.trailer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="license_plate"/>
+                <field name="brand"/>
+                <filter name="available" string="Müsait" domain="[('state', '=', 'available')]"/>
+                <filter name="on_trip" string="Seferde" domain="[('state', '=', 'on_trip')]"/>
+                <filter name="maintenance" string="Bakımda / Arızalı"
+                        domain="[('state', 'in', ('maintenance', 'breakdown'))]"/>
+                <separator/>
+                <filter name="archived" string="Arşivlenmiş" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_type" string="Dorse Tipi" context="{'group_by': 'trailer_type'}"/>
+                    <filter name="group_state" string="Durum" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="transport_trailer_action" model="ir.actions.act_window">
+        <field name="name">Dorseler</field>
+        <field name="res_model">transport.trailer</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

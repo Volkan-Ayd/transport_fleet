@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_transport_root" name="Taşımacılık" parent="fleet.menu_root" sequence="20"/>
+    <menuitem id="menu_transport_vehicles" name="Çekiciler / Araçlar" parent="menu_transport_root"
+              action="transport_vehicle_action" sequence="10"/>
+    <menuitem id="menu_transport_trailers" name="Dorseler" parent="menu_transport_root"
+              action="transport_trailer_action" sequence="20"/>
+    <menuitem id="menu_transport_drivers" name="Şoförler" parent="menu_transport_root"
+              action="transport_driver_action" sequence="30"/>
+    <menuitem id="menu_transport_documents" name="Belgeler" parent="menu_transport_root"
+              action="transport_document_action" sequence="40"/>
+</odoo>

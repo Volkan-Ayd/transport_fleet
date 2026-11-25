@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_transport_trailer_user,transport.trailer user,transport.trailer,fleet.fleet_group_user,r,
+access_transport_trailer_manager,transport.trailer manager,transport.trailer,fleet.fleet_group_manager,crud,
+access_transport_document_user,transport.document user,transport.document,fleet.fleet_group_user,r,
+access_transport_document_manager,transport.document manager,transport.document,fleet.fleet_group_manager,crud,

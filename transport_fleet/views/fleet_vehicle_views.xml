@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_view_form_inherit_transport" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit.transport</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_transport_documents" type="object" class="oe_stat_button"
+                        icon="fa-file-text-o">
+                    <field name="expiring_document_count" widget="statinfo" string="Uyarılı Belge"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Taşımacılık" name="transport">
+                    <group>
+                        <group string="Operasyon">
+                            <field name="transport_type"/>
+                            <field name="transport_state"/>
+                            <field name="transport_driver_id"/>
+                            <field name="current_trailer_id"/>
+                            <field name="hgs_tag"/>
+                            <field name="is_adr"/>
+                        </group>
+                        <group string="Teknik">
+                            <field name="axle_count"/>
+                            <field name="max_payload"/>
+                            <field name="gross_weight"/>
+                            <field name="fuel_tank_capacity"/>
+                        </group>
+                    </group>
+                    <field name="document_ids" context="{'default_owner_type': 'vehicle'}">
+                        <list decoration-danger="status == 'expired'" decoration-warning="status == 'expiring'">
+                            <field name="owner_type" column_invisible="1"/>
+                            <field name="doc_type"/>
+                            <field name="reference"/>
+                            <field name="expiry_date"/>
+                            <field name="status" widget="badge"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_search_inherit_transport" model="ir.ui.view">
+        <field name="name">fleet.vehicle.search.inherit.transport</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="t_tractor" string="Çekiciler" domain="[('transport_type', '=', 'tractor')]"/>
+                <filter name="t_available" string="Müsait" domain="[('transport_state', '=', 'available')]"/>
+                <filter name="t_on_trip" string="Seferde" domain="[('transport_state', '=', 'on_trip')]"/>
+                <filter name="t_down" string="Bakımda / Arızalı"
+                        domain="[('transport_state', 'in', ('maintenance', 'breakdown'))]"/>
+                <filter name="g_t_state" string="Operasyon Durumu" context="{'group_by': 'transport_state'}"/>
+                <filter name="g_t_type" string="Taşımacılık Tipi" context="{'group_by': 'transport_type'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="transport_vehicle_view_list" model="ir.ui.view">
+        <field name="name">transport.vehicle.list</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="transport_state == 'breakdown'"
+                  decoration-warning="transport_state == 'maintenance'">
+                <field name="license_plate"/>
+                <field name="model_id"/>
+                <field name="transport_type"/>
+                <field name="transport_driver_id"/>
+                <field name="current_trailer_id"/>
+                <field name="max_payload" optional="show"/>
+                <field name="odometer" optional="show"/>
+                <field name="transport_state" widget="badge"
+                       decoration-success="transport_state == 'available'"
+                       decoration-info="transport_state == 'on_trip'"
+                       decoration-warning="transport_state == 'maintenance'"
+                       decoration-danger="transport_state == 'breakdown'"/>
+                <field name="expiring_document_count" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="transport_vehicle_action" model="ir.actions.act_window">
+        <field name="name">Çekiciler / Araçlar</field>
+        <field name="res_model">fleet.vehicle</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('transport_vehicle_view_list')}),
+            (0, 0, {'view_mode': 'form'})]"/>
+    </record>
+</odoo>

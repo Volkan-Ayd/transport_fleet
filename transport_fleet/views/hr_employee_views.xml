@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form_inherit_transport" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.transport</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Şoför" name="driver" invisible="not is_driver">
+                    <group>
+                        <group>
+                            <field name="is_driver"/>
+                            <field name="license_class"/>
+                            <field name="driver_state"/>
+                        </group>
+                        <group>
+                            <button name="action_view_transport_documents" type="object"
+                                    class="btn btn-link" icon="fa-file-text-o"
+                                    string="Belgeleri Aç"/>
+                            <field name="expiring_document_count"/>
+                        </group>
+                    </group>
+                    <field name="document_ids" context="{'default_owner_type': 'employee'}">
+                        <list decoration-danger="status == 'expired'" decoration-warning="status == 'expiring'">
+                            <field name="owner_type" column_invisible="1"/>
+                            <field name="doc_type"/>
+                            <field name="reference"/>
+                            <field name="expiry_date"/>
+                            <field name="status" widget="badge"/>
+                        </list>
+                    </field>
+                    <separator string="Atanmış Araçlar"/>
+                    <field name="assigned_vehicle_ids" readonly="1"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="transport_driver_action" model="ir.actions.act_window">
+        <field name="name">Şoförler</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_driver', '=', True)]</field>
+        <field name="context">{'default_is_driver': True}</field>
+    </record>
+</odoo>
